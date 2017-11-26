@@ -51,3 +51,13 @@ In a nutshell, we have setup following network design
 ### ISP (Resolvers) ###
 
 ### Communication ###
+
+
+## Support & Logistiq ##
+* Mr. Yaovi Atohoun
+* Mr. Carl Aniambossou, DC & Ms. (from SudTelecom)
+* Hotel ?
+* Yazid 
+* Jeremy
+* Ramanou
+* Alfred
