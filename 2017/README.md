@@ -18,7 +18,7 @@ We use Raspberry-Pi 3-XX as server. For each server, we assign IP based on follo
 
 #### Design ####
 In a nutshell, we have setup following network design
-![Infrastructure Overview](bdf_hackathon.jpg)
+![Infrastructure Overview](https://raw.githubusercontent.com/AlfredArouna/DNSathon/master/2017/bdf_hackathon.jpg)
 
 
 
