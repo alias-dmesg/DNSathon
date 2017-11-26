@@ -7,12 +7,19 @@ In each subdirectory contains the materials submitted and archived by the partic
 ## Infrastructure ##
 
 ### Network ###
+We have used two Cisco-XXXX swicthes and one Mikrotik-XXX as router. Patch cable has been used to connect all components: Raspberry-pi, team member laptop, switches and routers. 
 
 #### Transit ####
+International connectivity has been assured by our gold sponsor SudTelecom.
 
-#### Materials #####
+#### Servers #####
+We use Raspberry-Pi 3-XX as server. For each server, we assign IP based on following IP adressing plan:
+
 
 #### Design ####
+In a nutshell, we have setup following network design
+![Infrastructure Overview](bdf_hackathon.jpg)
+
 
 
 ### Servers ###
