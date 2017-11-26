@@ -1,4 +1,4 @@
-# DNSATHON 2017 #
+# DNSathon 2017 #
 
 The 1st DNS Hackathon was held November 23-24, 2017 as part of Benin DNS Forum activities in Cotonou, BJ. 
 
