@@ -14,6 +14,8 @@ International connectivity has been assured by our gold sponsor SudTelecom.
 
 #### Servers #####
 We use Raspberry-Pi 3-XX as server. For each server, we assign IP based on following IP adressing plan:
+
+
 | Id | Role | # | Hostname | IP | Vlan |
 | --------- | - | -------- | -- | ---- |
 | 1 | **Root** | 1 | `pi-root` | 192.168.10.10/24 | 10 |
