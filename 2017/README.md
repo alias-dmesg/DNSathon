@@ -17,7 +17,7 @@ We use Raspberry-Pi 3-XX as server. For each server, we assign IP based on follo
 
 
 | Id | Role | # | Hostname | IP | Vlan |
-| --------- | - | -------- | -- | ---- |
+| ----- | --- | ----- | --- | ---- |
 | 1 | **Root** | 1 | `pi-root` | 192.168.10.10/24 | 10 |
 | 2 | **Registry** | 1 | `pi-registry-1` | 192.168.20.10/24 | 20 |
 | 3 | **Registry** | 2 | `pi-registry-2` | 192.168.20.20/24 | 20 |
