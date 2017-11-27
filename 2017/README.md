@@ -56,8 +56,6 @@ In a nutshell, we have setup following network design
 ## Support & Logistiq ##
 * Mr. Yaovi Atohoun
 * Mr. Carl Aniambossou, DC & Ms. (from SudTelecom)
-* Hotel ?
-* Yazid 
-* Jeremy
-* Ramanou
+* Hotel KTA ?
+* BDF 2017 Team (Yazid, Jeremy, Ramanou, Mathias, Muriel, Harold, etc)
 * Alfred
