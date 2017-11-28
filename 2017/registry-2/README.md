@@ -116,7 +116,7 @@ That's it, PowerDNS is now ready to be used. To learn more about it, please refe
     >$ apt-get install apache2 libapache2-mod-php5 php5 php5-common php5-curl php5-dev php5-gd php-pear php5-imap php5-mcrypt php5-mhash php5-ming php5-mysql php5-xmlrpc gettext
 
 
-Continue installing libc-client without Maildir support? <-- Yes
+  Continue installing libc-client without Maildir support? <-- Yes
 Poweradmin also requires the following two PEAR packages:
 
    >$ pear install DB
