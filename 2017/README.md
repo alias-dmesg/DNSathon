@@ -42,20 +42,69 @@ In a nutshell, we have setup following network design
 
 ## Teams ##
 
+### Communication ###
+* ***KOTTIN Caroline Marie***
+* AGUIAR Morel
+* FOLAHAN Didier
+* OUSSOUGOE Fabrice
+
 ### Root ####
+* ***BASSABI Falilou***
+* HOUGNI Bouraïma
+* TONAMON Florent
+* AHLONSOU Ruben
+* HOUINSOU Joanie
+* AWOU Kossi
+* MADY Sara 
 
 ### Registry ###
+#### Registry-1 ####
+* ***DOHETO H. Frédéric G***
+* AGOSSA S. Emmanuel
+* KEDAGNI Elgort
+* BOBO Andil
+* DANGBE Romuald
+
+#### Registry-2 ####
+* ***LETCHEDE Raoul***
+* AYENA Edgar
+* ALASSANE Malick
+* ADONON Aquilas
 
 ### Registrars ###
+#### Registrar-1 ####
+* ***ACHADE Charbel***
+* QUENUM Osée 
+* ELEGBA Venance
+* BOTON Madjid 
+* AHOUISSOUSSI Murielle
+
+#### Registrar-2 ####
+* ***SESSOU Géraud***
+* ABOH Melvina
+* DOSSOU Israel
+* DOVI Hortense
+* SEMASSA Luc
 
 ### ISP (Resolvers) ###
+#### ISP-1 ####
+* ***ADAM Fofana Taofic***
+* FAYOMI Horace
+* ASSOGBA Richmir
+* LEADI Samad
+* KAKPO Alves
+* ADJIN Fructueux
 
-### Communication ###
-
+#### ISP-2 ####
+* ***AHOUANSOU Lieben***
+* AGBAKOU Jean-Baptiste
+* AHOUANSOU Lieben
+* ALOHOUTADE Ronald
+* HOUNKPONOU Sidoine
 
 ## Support & Logistiq ##
 * Mr. Yaovi Atohoun
 * Mr. Carl Aniambossou, DC & Ms. (from SudTelecom)
 * Hotel KTA ?
 * BDF 2017 Team (Yazid, Jeremy, Ramanou, Mathias, Muriel, Harold, etc)
-* Alfred
+* Alfred (coach)
