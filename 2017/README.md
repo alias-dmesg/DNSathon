@@ -7,13 +7,13 @@ In each subdirectory contains the materials submitted and archived by the partic
 ## Infrastructure ##
 
 ### Network ###
-We have used two Cisco-XXXX swicthes and one Mikrotik-XXX as router. Patch cable has been used to connect all components: Raspberry-pi, team member laptop, switches and routers. 
+We have used two Cisco 2950 swicthes and one Mikrotik 2011 UiAs-2HnD as router. Patch cable has been used to connect all components: Raspberry-Pi, team member laptop, switches and routers. 
 
 #### Transit ####
-International connectivity has been assured by our gold sponsor SudTelecom.
+International connectivity has been assured by the sponsor Sud Telecom.
 
 #### Servers #####
-We use Raspberry-Pi 3-XX as server. For each server, we assign IP based on following IP adressing plan:
+For each server, we assign IP based on following IP adressing plan:
 
 
 | Id | Role | # | Hostname | IP | GW | Vlan | Resolvers |
@@ -32,12 +32,17 @@ In a nutshell, we have setup following network design
 ![Infrastructure Overview](https://raw.githubusercontent.com/AlfredArouna/DNSathon/master/2017/bdf_hackathon.jpg)
 
 
-
 ### Servers ###
 
 #### Materials ####
+We use Raspberry-Pi 3 Model B as servers. For each one, we use the default pre-installed OS: `Raspbian`. 
 
 #### Services ####
+With servers, we will offer DNS services, such as:
+* Root
+* Registries
+* Registrars
+* Resolvers
 
 
 ## Teams ##
