@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9" xmlns:image="http://www.google.com/schemas/sitemap-image/1.1" xmlns:xhtml="http://www.w3.org/1999/xhtml">
+  <url>
+    <loc>http://prices.com/index.html</loc>
+    <lastmod>2017-11-24</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.5</priority>
+    <image:image>
+      <image:loc>http://prices.com/images/featured.png</image:loc>
+    </image:image>
+    <image:image>
+      <image:loc>http://prices.com/images/star.png</image:loc>
+    </image:image>
+    <image:image>
+      <image:loc>http://prices.com/images/oui.png</image:loc>
+    </image:image>
+    <image:image>
+      <image:loc>http://prices.com/images/non.png</image:loc>
+    </image:image>
+  </url>
+</urlset>

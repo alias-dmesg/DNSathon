@@ -1,0 +1,153 @@
+<manifest alg="2" build="2018.0.0.379" opt="true" iceEnabled="true" iceMarkupVersion="2" iceEnabledOptions="link,responsive,cachebuster,textStyling" exportTarget="other" domain="VEDCOM.BJ" resolutions="1x" timestamp="1511534020159">
+  <folder name="assets">
+    <file name="prices.html" crc="348026718" seo="true" mt="1511513637000"/>
+  </folder>
+  <folder name="css">
+    <file name="site_global.css" crc="3813779073"/>
+    <file name="formulaire-d-inscription.css" crc="376577348" ref="formulaire-d-inscription"/>
+    <file name="index.css" crc="4241196354" ref="index"/>
+    <file name="prices.css" crc="164666367" ref="prices"/>
+  </folder>
+  <folder name="scripts">
+    <file name="jquery-1.8.3.min.js" crc="209076791" ref="index:formulaire-d-inscription:prices"/>
+    <file name="museutils.js" crc="3803043152" ref="index:formulaire-d-inscription:prices"/>
+    <file name="whatinput.js" crc="86476730" ref="index:formulaire-d-inscription:prices"/>
+    <file name="museconfig.js" crc="4153641093" ref="index:formulaire-d-inscription:prices"/>
+    <file name="jquery.watch.js" crc="99325471" ref="index:formulaire-d-inscription:prices"/>
+    <file name="webpro.js" crc="242022427" ref="index:formulaire-d-inscription"/>
+    <file name="musewpslideshow.js" crc="457073769" ref="index"/>
+    <file name="jquery.museoverlay.js" crc="483674903" ref="index"/>
+    <file name="touchswipe.js" crc="4066113679" ref="index"/>
+    <file name="form_check.php" crc="147359589" ref="index"/>
+    <file name="form_throttle.php" crc="93986428" ref="index"/>
+    <file name="form_process.php" crc="3851993751" ref="index"/>
+    <file name="form-u906.php" crc="4225420955" ref="index"/>
+    <file name="require.js" crc="4157109226" ref="index:formulaire-d-inscription:prices"/>
+    <file name="jquery.musepolyfill.bgsize.js" crc="4148998990" ref="formulaire-d-inscription:index"/>
+    <file name="form-u1625.php" crc="47512464" ref="formulaire-d-inscription"/>
+  </folder>
+  <folder name="images">
+    <file name="1-crop-u882.jpg" crc="3990378603" seo="true" ref="index">
+      <caption webpage="index" alt=""/>
+    </file>
+    <file name="blank.gif" crc="4208392903" ref="index"/>
+    <file name="conseil-achat-ordinateur-crop-u1007.jpg" crc="3787216914" seo="true" ref="index">
+      <caption webpage="index" alt=""/>
+    </file>
+    <file name="internet-2017-10-crop-u967.jpg" crc="23722488" seo="true" ref="index">
+      <caption webpage="index" alt=""/>
+    </file>
+    <file name="loading.gif" crc="3815509949" ref="index"/>
+    <file name="u997-4.png" crc="142525967" ref="index"/>
+    <file name="ll.png" crc="3974623861" seo="true" ref="index">
+      <caption webpage="index" alt=""/>
+    </file>
+    <file name="u1390-4.png" crc="218492496" ref="formulaire-d-inscription"/>
+    <file name="u1676-4.png" crc="487472796" ref="formulaire-d-inscription"/>
+    <file name="checkboxunchecked.jpg" crc="495023700" ref="formulaire-d-inscription">
+      <caption webpage="formulaire-d-inscription" alt=""/>
+    </file>
+    <file name="checkboxuncheckedrollover.jpg" crc="4076496830" ref="formulaire-d-inscription">
+      <caption webpage="formulaire-d-inscription" alt=""/>
+    </file>
+    <file name="checkboxuncheckedmousedown.jpg" crc="361678653" ref="formulaire-d-inscription">
+      <caption webpage="formulaire-d-inscription" alt=""/>
+    </file>
+    <file name="checkboxchecked.jpg" crc="477278992" ref="formulaire-d-inscription">
+      <caption webpage="formulaire-d-inscription" alt=""/>
+    </file>
+    <file name="checkboxcheckedrollover.jpg" crc="435737969" ref="formulaire-d-inscription">
+      <caption webpage="formulaire-d-inscription" alt=""/>
+    </file>
+    <file name="checkboxcheckedmousedown.jpg" crc="4004261994" ref="formulaire-d-inscription">
+      <caption webpage="formulaire-d-inscription" alt=""/>
+    </file>
+    <file name="radiobuttonunchecked.png" crc="3976871150" ref="index">
+      <caption webpage="index" alt=""/>
+    </file>
+    <file name="radiobuttonuncheckedrollover.png" crc="4276313674" ref="index">
+      <caption webpage="index" alt=""/>
+    </file>
+    <file name="radiobuttonuncheckedmousedown.png" crc="54863585" ref="index">
+      <caption webpage="index" alt=""/>
+    </file>
+    <file name="radiobuttonchecked.png" crc="4193302265" ref="index">
+      <caption webpage="index" alt=""/>
+    </file>
+    <file name="radiobuttoncheckedrollover.png" crc="88928956" ref="index">
+      <caption webpage="index" alt=""/>
+    </file>
+    <file name="radiobuttoncheckedmousedown.png" crc="4280357799" ref="index">
+      <caption webpage="index" alt=""/>
+    </file>
+    <file name="u2487.png" crc="479619500" ref="index"/>
+    <file name="u2487-ferr.png" crc="3831814040" ref="index"/>
+    <file name="u2539.png" crc="175470375" ref="index"/>
+    <file name="u2539-ferr.png" crc="4161470449" ref="index"/>
+    <file name="featured.png" crc="4074436425" seo="true" ref="index:prices">
+      <caption webpage="index" alt=""/>
+      <caption webpage="prices" alt=""/>
+    </file>
+    <file name="star.png" crc="468035987" seo="true" ref="index:prices">
+      <caption webpage="index" alt=""/>
+      <caption webpage="prices" alt=""/>
+    </file>
+    <file name="shadow2-u3077-fr.png" crc="4013025124" ref="index:prices"/>
+    <file name="oui.png" crc="270406120" seo="true" ref="index:prices">
+      <caption webpage="index" alt=""/>
+      <caption webpage="index" alt=""/>
+      <caption webpage="index" alt=""/>
+      <caption webpage="index" alt=""/>
+      <caption webpage="index" alt=""/>
+      <caption webpage="index" alt=""/>
+      <caption webpage="index" alt=""/>
+      <caption webpage="index" alt=""/>
+      <caption webpage="index" alt=""/>
+      <caption webpage="index" alt=""/>
+      <caption webpage="index" alt=""/>
+      <caption webpage="index" alt=""/>
+      <caption webpage="index" alt=""/>
+      <caption webpage="index" alt=""/>
+      <caption webpage="index" alt=""/>
+      <caption webpage="index" alt=""/>
+      <caption webpage="index" alt=""/>
+      <caption webpage="index" alt=""/>
+      <caption webpage="prices" alt=""/>
+      <caption webpage="prices" alt=""/>
+      <caption webpage="prices" alt=""/>
+      <caption webpage="prices" alt=""/>
+      <caption webpage="prices" alt=""/>
+      <caption webpage="prices" alt=""/>
+      <caption webpage="prices" alt=""/>
+      <caption webpage="prices" alt=""/>
+      <caption webpage="prices" alt=""/>
+      <caption webpage="prices" alt=""/>
+      <caption webpage="prices" alt=""/>
+      <caption webpage="prices" alt=""/>
+      <caption webpage="prices" alt=""/>
+      <caption webpage="prices" alt=""/>
+      <caption webpage="prices" alt=""/>
+      <caption webpage="prices" alt=""/>
+      <caption webpage="prices" alt=""/>
+      <caption webpage="prices" alt=""/>
+    </file>
+    <file name="non.png" crc="293624608" seo="true" ref="index:prices">
+      <caption webpage="index" alt=""/>
+      <caption webpage="index" alt=""/>
+      <caption webpage="index" alt=""/>
+      <caption webpage="index" alt=""/>
+      <caption webpage="index" alt=""/>
+      <caption webpage="index" alt=""/>
+      <caption webpage="prices" alt=""/>
+      <caption webpage="prices" alt=""/>
+      <caption webpage="prices" alt=""/>
+      <caption webpage="prices" alt=""/>
+      <caption webpage="prices" alt=""/>
+      <caption webpage="prices" alt=""/>
+    </file>
+    <file name="shadow1-u3078-fr.png" crc="4121578612" ref="index:prices"/>
+  </folder>
+  <file name="index.html" crc="4262161183" seo="true" mt="1511533973496" redirect="true"/>
+  <file name="formulaire-d-inscription.html" crc="3891221414" seo="true" mt="1511530961314" redirect="true"/>
+  <file name="prices.html" crc="510436737" seo="true" mt="1511531127774" redirect="true"/>
+</manifest>
