@@ -14,7 +14,7 @@ Then, we check that unbound have started by using this command : `sudo netstat -
 
 The ***root.hints*** will be provided by the root team. Basicaly, this file will contain only one record: the `.` with his NS servers (managed by the root team).
 
-### Configuration of Unbound###
+### Configuration of Unbound ###
 
 We backup current configuration and create a clean new one with following configuration in `/etc/unbound/unbound.conf`: 
 
