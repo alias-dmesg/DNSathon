@@ -1,4 +1,4 @@
-# Custom reolver
+# Custom ISP resolver
 
 ## Tools ##
 Since we are an ISP, we need validating and caching resolver. For this purpose, we will use a lightweight caching and resolver DNS server: `unbound`.
