@@ -7,7 +7,7 @@ In each subdirectory contains the materials submitted and archived by the partic
 ## Infrastructure ##
 
 ### Network ###
-We have used two Cisco 2950 swicthes and one Mikrotik 2011 UiAs-2HnD as router. Patch cable has been used to connect all components: Raspberry-Pi, team member laptop, switches and routers. 
+We have used two Cisco Catalyst 2950 switches and one Mikrotik RB2011UiAS-2HnD-IN as router. Patch cable has been used to connect all components: Raspberry-Pi, team member laptop, switches and router. 
 
 #### Transit ####
 International connectivity has been assured by the sponsor Sud Telecom.
