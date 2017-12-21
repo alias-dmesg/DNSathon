@@ -87,14 +87,14 @@ ctn.		IN 	NS	ns1.pi-register2.ctn.
 uac.		IN 	NS	ns1.pi-register1.uac.
 uac.		IN 	NS	ns2.pi-register1.uac.
 
-ns1.pi-register2.ctn.	IN	A	192.168.20.20
-ns2.pi-register2.ctn.	IN	A	192.168.20.10
+ns1.pi-register2.ctn.	IN	A	192.168.20.10
+ns2.pi-register2.ctn.	IN	A	192.168.20.20
 ns1.pi-register1.uac.	IN	A	192.168.20.20
 ns2.pi-register1.uac.	IN	A	192.168.20.10
 ```
 
 ### 5 - Force usage of local DNS server ###
-Edit the file `/etc/resolv.conf` and use "127.0.0.1" for nameserver:
+Edit the file `/etc/resolv.conf` and use `127.0.0.1` for nameserver:
 
 `nameserver       127.0.0.1`
 
