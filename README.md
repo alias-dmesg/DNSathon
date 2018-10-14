@@ -7,4 +7,4 @@ The results of the hackathon are available [here](2017)
 ## Licence ##
 MIT License
 
-Copyright (c) 2017 Benin Dns Forum
+Copyright (c) 2017,2018 Alfred Arouna
