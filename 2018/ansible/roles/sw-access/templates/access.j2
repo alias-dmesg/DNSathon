@@ -1,0 +1,26 @@
+{% for item in trunks %}
+interface {{ interface }}/{{ item.id }}
+ description {{ item.desc }}
+ switchport trunk encapsulation dot1q
+ switchport trunk native vlan {{ item.mgmt }}
+ switchport mode trunk
+{% endfor %}
+
+
+
+{% set interface_id = 1 %}
+{% for vlan in vlans[:-1] %}
+ {% set count = 0 %}
+ {% for num in range(ports_number_per_group) %}
+  interface {{ interface }}/{{ interface_id }}
+   description {{ vlan.name}}-{{ count }}
+   switchport access vlan {{ vlan.id }}
+   switchport mode access
+  {% set count = count + 1 %}
+  {% set interface_id = interface_id + 1 %}
+{#  {% if count == 4 %}
+   {% set count = 0 %}
+  {% endif %}
+#}
+ {% endfor %}
+{% endfor %}

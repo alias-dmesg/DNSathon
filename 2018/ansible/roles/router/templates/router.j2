@@ -1,0 +1,20 @@
+interface {{ wan_interface }}
+ description "TO INTERNET"
+ ip address {{ wan_ip }} {{ wan_mask }}
+ ip nat outside
+ no shutdown
+
+interface {{ lan_interface }}
+ description "TO LAN"
+ ip nat inside
+ no ip address
+ no shutdown
+
+{% for vlan in vlans %}
+interface {{ lan_interface }}.{{ vlan.id }}
+ description {{ vlan.name }}
+ encapsulation dot1Q {{ vlan.id }}
+ ip address 10.10.{{ vlan.id }}.1 255.255.255.0
+ ip nat inside
+ no shutdown
+{% endfor %}

@@ -1,0 +1,71 @@
+[[outputs.influxdb]]
+database = "network"
+
+
+[[inputs.snmp]]
+{#
+  agents = {{ groups['network']  | map('extract', hostvars, ['ansible_host'] ) | join('","') | list }} 
+#  agents = [ "10.10.60.20:161" ]
+#}
+  agents = {{ groups['network']  | map('extract', hostvars, ['ansible_host'] ) | list }} 
+  version = 2
+  community = "{{ snmp_community }}"
+  name = "snmp"
+  interval = "60s"
+  timeout = "10s"
+  retries = 3
+
+ [[inputs.snmp.field]]
+    name = "hostname"
+    oid = "RFC1213-MIB::sysName.0"
+    is_tag = true
+
+  # IF-MIB::ifXTable contains newer High Capacity (HC) counters that do not overflow as fast for a few of the ifTable counters
+  [[inputs.snmp.table]]
+    name = "interface"
+    inherit_tags = [ "hostname" ]
+    oid = "IF-MIB::ifXTable"
+
+  # Interface tag - used to identify interface in metrics database
+  [[inputs.snmp.table.field]]
+    name = "ifDescr"
+     oid = "IF-MIB::ifDescr"
+     is_tag = true
+
+  [[inputs.snmp.table.field]]
+    name = "ifName"
+    oid = "IF-MIB::ifName"
+    is_tag = true
+
+  [[inputs.snmp.field]]
+    name = "uptime"
+    oid = "DISMAN-EXPRESSION-MIB::sysUpTimeInstance"
+
+  # IF-MIB::ifTable contains counters on input and output traffic as well as errors and discards.
+  [[inputs.snmp.table]]
+    name = "interface"
+    inherit_tags = [ "hostname" ]
+    oid = "IF-MIB::ifTable"
+
+   # Interface tag - used to identify interface in metrics database
+  [[inputs.snmp.table.field]]
+    name = "ifDescr"
+    oid = "IF-MIB::ifDescr"
+    is_tag = true
+
+  # EtherLike-MIB::dot3StatsTable contains detailed ethernet-level information about what kind of errors have been logged on an interface (such as FCS error, frame too long, etc)
+  [[inputs.snmp.table]]
+    name = "interface"
+    inherit_tags = [ "hostname" ]
+    oid = "EtherLike-MIB::dot3StatsTable"
+
+  # Interface tag - used to identify interface in metrics database
+  [[inputs.snmp.table.field]]
+    name = "ifDescr"
+    oid = "IF-MIB::ifDescr"
+    is_tag = true
+    
+[[inputs.ping]]
+  ## List of urls to ping
+  urls = ["dns.quad9.net", "gouv.bj", "nic.bj", "whois.nic.bj", "isocelmail.bj", "mtn.bj", "moov.bj", "jenysas.bj", "benintelecoms.bj" ]
+

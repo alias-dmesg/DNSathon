@@ -1,0 +1,52 @@
+---
+# tasks file for router
+ - name: Generate configuration files
+   ios_config:
+     src: router.j2
+
+ - name: Set Default Gateway
+   ios_config:
+     lines: ip default-gateway {{ wan_gw }}
+
+ - name: Create access list for SNAT
+   ios_config:
+     lines:
+       - access-list {{ item.id }} permit 10.10.{{ item.id }}.0 0.0.0.255 log
+     parents: ip access-list {{ item.id }}
+     before: no ip access-list {{ item.id }}
+     match: exact
+     with_items: "{{ vlans }}" 
+
+ - name: Create Nat pool for SNAT
+   ios_config:
+     lines:
+       - ip nat pool SNAT-{{ item.id }} 10.10.{{ item.id }}.0 10.10.{{ item.id }}.255 netmask 255.255.255.0
+     match: exact
+     with_items: "{{ vlans }}" 
+
+ - name: Configure Nat overload for SNAT
+   ios_config:
+     lines:
+       - ip nat inside source list {{ item.id }} interface {{ wan_interface }} overload
+     match: exact
+     with_items: "{{ vlans }}" 
+
+ - name: Force default gw
+   ios_config:
+     lines:
+       - ip route 0.0.0.0 0.0.0.0 {{ wan_interface }}
+
+ - name: Save configuration
+   ios_config: 
+     save: yes
+
+ - name: Get new config
+   ios_config:
+     commands: 
+       - show run
+     register: config
+
+ - name: Save new config
+   copy:
+    content: "{{ config.stdout[0] }}"
+    dest: "{{ role_path }}/router/files/router_config-{{ timestamp }}.txt" 

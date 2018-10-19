@@ -1,0 +1,49 @@
+---
+# vars file for management
+
+unbound_dir: "/etc/unbound"
+
+dnsdist_config: "/etc/dnsdist"
+dnsmasq_dir: "/etc/dnsmasq.d"
+
+pihole_user: "pihole"
+pihole_group: "pihole"
+pihole_path: "/opt/pihole"
+pihole_config_path: "/etc/pihole"
+pihole_interface: eth0
+pihole_ipv4_address: "{{ ansible_host }}"
+pihole_ipv6_address: ::1
+
+# Default CORS (Cross-Origin Resource Sharing) hosts
+graphite_api_cors_hosts: '*'
+# Default timezone
+graphite_api_timezone: "Africa/Porto-Novo"
+# Default bind address
+graphite_api_bind_address: 0.0.0.0
+# Default port number
+graphite_api_port: 8888
+# Additional gunicorn command line options
+graphite_api_gunicorn_options: ''
+
+carbon_host: 127.0.0.1
+carbon_port: 7002
+carbon_timeout: 1
+carbon_retry_delay: 15
+carbon_prefix: carbon
+carbon_replication: 1
+
+influxdb_ip_address: 127.0.0.1
+influxdb_database_dns: "dnsstats"
+influxdb_database_speedtest: "speedtest"
+influxdb_database_network: "network"
+influxdb_databases:
+ - "{{ influxdb_database_dns }}"
+ - "{{ influxdb_database_speedtest }}"
+ - "{{ influxdb_database_network }}"
+
+telegraf_folder: "/root/telegraf"
+telegraf_etc: "/etc/telegraf/telegraf.d"
+telegraf_var: "/var/log/telegraf"
+telegraf_user: "telegraf"
+telegraf_group: "telegraf"
+

@@ -1,0 +1,14 @@
+{% for item in trunks %}
+interface {{ interface }}/{{ item.id }}
+ description {{ item.desc }}
+ switchport trunk encapsulation dot1q
+ switchport trunk native vlan {{ item.mgmt }}
+ switchport mode trunk
+{% endfor %}
+
+{% for item in servers_access %}
+interface {{ interface }}/{{ item.id }}
+ description {{ item.desc }}
+ switchport mode access
+ switchport access vlan {{ item.vlan }}
+{% endfor %}

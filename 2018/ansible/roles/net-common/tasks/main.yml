@@ -1,0 +1,109 @@
+---
+# tasks file for net-common
+ - name: Configure SSH
+   telnet:
+    user: cisco
+    password: cisco
+    login_prompt: "Username: "
+    prompts:
+      - "[>|#]"
+    command:
+      - terminal length 0
+      - configure terminal
+      - hostname {{ ansible_host}}
+      - ip domain-name {{ ansible_host }}.{{ domain }}
+      - crypto key generate rsa modulus 2048
+      - ip ssh version 2
+   register: ssh_enabled 
+
+ - name: Backup Current config
+   ios_config:
+     backup: yes
+
+ - name: Set banner
+   ios_config:
+     lines: 
+      - banner motd % DNSathon Ansible setup! Do not edit directly %
+      - banner exec % ATTENTION! Your modification will be lost on next Ansible run ! Do not edit directly %
+      - banner login % Current configuration has been setup with Ansible! Do not edit directly %
+
+ - name: Set Hostname
+   ios_config:
+     lines: hostname {{ ansible_host }}
+
+ - name: Set NTP Server
+   ios_config:
+     lines: 
+       - ntp logging
+       - ntp server {{ ntp_server }} prefer
+
+ - name: Set Password encryption
+   ios_config:
+     lines: service password-encryption
+
+ - name: Set Debug/Log Timestamp
+   ios_config:
+     lines: 
+       - service timestamps debug uptime
+       - service timestamps log datetime show-timezone
+
+ - name: Set Timezone
+   ios_config:
+     lines: clock timezone WAT 1
+
+ - name: Set backup Enable password
+   ios_config:
+     lines: enable secret {{ enable_secret }}
+
+ - name: Set Syslog
+   ios_config:
+     lines:
+       - logging message-counter syslog 
+       - logging facility local6
+       - logging {{ syslog_server }}
+
+ - name: Set Console
+   ios_config:
+     lines:
+       - password {{ vty_con_pass }}
+     parents: line con 0
+
+ - name: Set VTY 
+   ios_config:
+     lines:
+       - password {{ vty_con_pass }}
+       - access-class 10 in
+     parents: line vty 0 5
+
+ - name: Set Default Gateway
+   ios_config:
+     lines: ip default-gateway 10.10.60.1
+   when: group_names[0] != "dns-router" 
+
+ - name: Disable Unused services
+   ios_config:
+     lines:
+       - no ip http server
+       - no ip http secure-server
+       - no service pad
+
+ - name: Set SNMP
+   ios_config:
+     lines:
+       - snmp-server community {{ snmp_community }} RO
+       - snmp-server enable traps
+       - snmp-server contact {{ snmp_contact }}       
+       - snmp-server host {{ snmp_server }} version 2c {{ snmp_community }}
+
+ - name: Set Access-List
+   ios_config:
+     lines:
+       - access-list CONTROL permit 10.10.60.0 0.0.0.255 log
+       - access-list CONTROL permit 10.10.50.0 0.0.0.255 log
+     parents: ip access-list standard CONTROL    
+     before: no ip access-list standard CONTROL
+     match: exact
+ 
+ - name: Save configuration
+   ios_config: 
+     save: yes

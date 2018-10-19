@@ -1,0 +1,40 @@
+[network:children]
+dns-router
+dns-noc
+dns-access
+
+[dns-router]
+dns-noc-router ansible_host=10.10.60.1
+
+[dns-noc]
+dns-noc-sw ansible_host=10.10.60.20
+
+[dns-access]
+dns-access-sw ansible_host=10.10.60.25    
+
+[server:children]
+dns-root
+dns-registry
+dns-registrar
+dns-resolver
+management
+
+[dns-root]
+d.root ansible_host=10.10.10.10
+#n.root ansible_host=10.10.10.11
+
+[dns-registry]
+s.registry ansible_host=10.10.20.10
+a.registry ansible_host=10.10.20.11
+ 
+[dns-registrar]
+t.registrar ansible_host=10.10.30.10
+#h.registrar ansible_host=10.10.30.11
+
+[dns-resolver]
+o.resolver ansible_host=10.10.40.10
+#n.resolver ansible_host=10.10.40.11
+
+[management]
+manager ansible_host=10.10.60.5
+

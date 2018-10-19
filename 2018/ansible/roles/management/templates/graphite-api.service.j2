@@ -1,0 +1,20 @@
+# This is /etc/systemd/system/multi-user.target.wants/graphite-api.service
+[Unit]
+Description=Graphite-API service
+Requires=graphite-api.socket
+ConditionFileIsExecutable=/usr/bin/gunicorn3
+ConditionPathExists=/etc/graphite-api.yaml
+ConditionPathExists=/usr/lib/python3/dist-packages/graphite_api/app.py
+
+[Service]
+ExecStart=/usr/bin/gunicorn3 --name=graphite-api graphite_api.app:app
+User=_graphite
+Group=_graphite
+ExecReload=/bin/kill -s HUP $MAINPID
+#ExecStop=/bin/kill -s TERM $MAINPID
+ExecStop=/bin/kill -s $MAINPID
+PrivateTmp=true
+
+[Install]
+WantedBy=multi-user.target
+   

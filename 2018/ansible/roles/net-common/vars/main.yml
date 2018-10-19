@@ -1,0 +1,3 @@
+---
+# vars file for net-common
+ntp_server: 10.10.60.5

@@ -1,0 +1,9 @@
+# {{ ansible_managed }}
+
+port=5353
+{% for vlan in vlans %}
+interface=eth0.{{ vlan.id }}
+dhcp-range=eth0.{{ vlan.id }},10.10.{{ vlan.id }}.100,10.10.{{ vlan.id }}.150,4h
+dhcp-option=eth0.{{ vlan.id }},3,10.10.{{ vlan.id }}.1
+{% endfor %}
+server=127.0.0.1#5300

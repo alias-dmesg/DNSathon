@@ -1,0 +1,135 @@
+---
+# tasks file for registry
+
+
+ # Install curl
+ - name: Install curl
+   apt: name=curl state=latest
+   become: yes
+
+#
+# # Install and configure PowerDNS Authoritative with dependencies
+# # Use powerdns repos
+# - name: Add PowerDns repository
+#   lineinfile:
+#    backup: yes
+#    state: present
+#    create: yes
+#    path: /etc/apt/sources.list.d/pdns.list
+#    line: "deb http://repo.powerdns.com/raspbian jessie-auth-40 main"
+#
+# - name: Add PowerDns preference repository
+#   blockinfile:
+#    state: present
+#    create: yes
+#    path: /etc/apt/preferences.d/pdns
+#    backup: yes
+#    block: |
+#      Package: pdns-*
+#      Pin: origin repo.powerdns.com
+#      Pin-Priority: 600      
+#    marker: "# {mark} ANSIBLE MANAGED BLOCK PREFERENCE "
+#
+# - name: Get PowerDNS key
+##   shell: "curl https://repo.powerdns.com/CBC8B383-pub.asc | sudo apt-key add - &&"
+#   apt_key: 
+#    #url: https://repo.powerdns.com/CBC8B383-pub.asc
+#    url: https://repo.powerdns.com/FD380FBB-pub.asc
+#    state: present
+#
+# - name: Update packages list
+#   apt: update_cache=yes
+#   become: yes
+#
+# - name: Upgrade packages
+#   apt: upgrade=safe
+#   become: yes
+
+ # Install powerdns authoritative server
+ - name: Install pdns-server
+   apt: name=pdns-server state=latest
+   become: yes
+
+ # Install powerdns authoritative server backend
+ - name: Install pdns-backend-mysql
+   apt: name=pdns-backend-mysql state=latest
+   become: yes
+
+ # Install Mysql backend
+ - name: Install MariadDb Server
+   apt: name=mariadb-server state=latest
+   become: yes
+
+ # Install Mysql backend
+ - name: Install MariadDb Client
+   apt: name=mariadb-client state=latest
+   become: yes
+
+ # Copy Sql schema
+ - name: Copy PDNS format
+   become: yes
+   copy:
+    src: "powerdns.sql"   
+    dest: "/root/powerdns.sql"
+    mode: 0644
+    backup: yes
+
+
+ # Create Database User with correct schema
+ - name: Create postgresql user
+   postgresql_db:
+    name: "{{ postgres_database }}"
+    state: restore
+    target: /root/powerdns.sql
+
+ # Create user and assign it permission
+ - name: Create user and assign it persmission
+   postgresql_user:
+    db: "{{ postgres_database }}"
+    name: "{{ postgres_user }}"
+    password: "{{ postgres_password }}"
+
+ - name: PostgreSQL access
+   lineinfile:
+    backup: yes
+    state: present
+    path: /etc/postgresql/9.6/main/ph_hba.conf   
+    line: "host powerdns powerdns 127.0.0.0/16 md5"
+
+ # Enable Json API
+
+ - name: Restart service postgres
+   service:
+    name: postgres
+    enabled: yes
+    state: restarted
+
+ # Install webserver to easier zone management
+ - name: Install nginx
+   apt: name=nginx-full state=latest
+   become: yes
+
+
+ # Configure PowerAdmin
+ - name: Download PowerAdmin
+   get_url:
+    backup: yes
+    url:   https://github.com/poweradmin/poweradmin/archive/v2.1.4.tar.gz
+    dest: "/root/poweradmin-v2.1.4.tar.gz"
+    mode: 0644
+
+ - name:  Uncompress PowerAdmin
+   unarchive:
+    remote_src: yes
+    src: /root/poweradmin-v2.1.4.tar.gz
+    dest: /var/www/html/poweradmin
+
+ # Continue on web Interface
+
+  # Create custom zones
+
+  # Delegate zones to registrar or not
+
+  # Enable powerdns API or implement EPP
+
+  # Allow customer (registrar) to create zones

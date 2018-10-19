@@ -1,0 +1,18 @@
+10.10.10.10	d.root
+10.10.10.20	n.root
+
+10.10.20.10	s.registry
+10.10.20.20	a.registry
+
+10.10.30.10	t.registrar
+10.10.30.20	h.registrar
+
+10.10.40.10	o.resolver
+10.10.40.20	n.resolver
+
+# LAN Pihole, trunk interface
+10.10.1.1	manager # Management
+10.10.10.1	manager
+10.10.20.1	manager
+10.10.30.1	manager
+10.10.40.1	manager

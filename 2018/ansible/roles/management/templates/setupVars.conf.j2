@@ -1,0 +1,9 @@
+# {{ ansible_managed }}
+
+configDirectory={{ pihole_config_path }}
+installDirectory={{ pihole_path }}
+PIHOLE_INTERFACE={{ pihole_interface }}
+IPV4_ADDRESS={{ pihole_ipv4_address }}/24
+IPV6_ADDRESS={{ pihole_ipv6_address }}
+QUERY_LOGGING=true
+INSTALL_WEB=true

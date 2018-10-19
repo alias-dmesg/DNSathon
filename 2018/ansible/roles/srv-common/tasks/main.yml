@@ -1,0 +1,198 @@
+---
+# tasks file for common
+
+
+- name: Set Hostname
+  hostname:
+    name: "{{ ansible_hostname }}.{{ domain }}"
+
+- name: Fix /etc/hosts 
+  lineinfile:
+   state: present
+   path: /etc/hosts
+   regexp: "^{{ ansible_host }}"
+#    line: "{{ ansible_default_ipv4.address }} {{ inventory_hostname }} {{ ansible_hostname }} {{ management_hostname }}"
+   line: "{{ ansible_host }} {{ inventory_hostname }} {{ ansible_hostname }} {{ ansible_hostname }}.{{ domain }}"
+
+- name: Update packages list
+  apt: update_cache=yes
+  become: yes
+
+- name: Upgrade packages
+  apt: upgrade=safe
+  become: yes
+
+- name: Install vim
+  apt: name=vim state=latest
+  become: yes
+
+- name: Install ntp client
+  apt: name=ntp state=latest
+  become: yes
+
+- name: Install syslog server
+  apt: name=rsyslog state=latest
+  become: yes
+
+- name: Configure remote syslog for root
+  blockinfile:
+   path: /etc/rsyslog.conf 
+   backup: yes
+   block: |
+      *.* @10.10.10.5:514
+      *.* @@10.10.10.5:514
+   marker: "\r\n # {mark} ANSIBLE MANAGED BLOCK REMOTE SYSLOG"
+  when: group_names[0] == "dns-root" 
+
+- name: Configure remote syslog for registry
+  blockinfile:
+   path: /etc/rsyslog.conf 
+   backup: yes
+   block: |
+      *.* @10.10.20.5:514
+      *.* @@10.10.20.5:514
+   marker: "\r\n # {mark} ANSIBLE MANAGED BLOCK REMOTE SYSLOG"
+  when: group_names[0] == "dns-registry" 
+
+- name: Configure remote syslog for registrar
+  blockinfile:
+   path: /etc/rsyslog.conf 
+   backup: yes
+   block: |
+      *.* @10.10.30.5:514
+      *.* @@10.10.30.5:514
+   marker: "\r\n # {mark} ANSIBLE MANAGED BLOCK REMOTE SYSLOG"
+  when: group_names[0] == "dns-registrar" 
+
+- name: Configure remote syslog for resolver
+  blockinfile:
+   path: /etc/rsyslog.conf 
+   backup: yes
+   block: |
+      *.* @10.10.40.5:514
+      *.* @@10.10.40.5:514
+   marker: "\r\n # {mark} ANSIBLE MANAGED BLOCK REMOTE SYSLOG"
+  when: group_names[0] == "dns-resolver" 
+
+- name: Configure dns-root ntp client to use local ntp server
+  lineinfile:
+   backup: yes
+   path: /etc/ntp.conf
+   regexp: '^server'
+   line: 'server 10.10.10.5 prefer'
+  when: group_names[0] == "dns-root" 
+
+- name: Configure dns-registry ntp client to use local ntp server
+  lineinfile:
+   backup: yes
+   path: /etc/ntp.conf
+   regexp: '^server'
+   line: 'server 10.10.20.5 prefer'
+  when: group_names[0] == "dns-registry" 
+
+- name: Configure dns-registrar ntp client to use local ntp server
+  lineinfile:
+   backup: yes
+   path: /etc/ntp.conf
+   regexp: '^server'
+   line: 'server 10.10.30.5 prefer'
+  when: group_names[0] == "dns-registrar" 
+
+- name: Configure dns-resolver ntp client to use local ntp server
+  lineinfile:
+   backup: yes
+   path: /etc/ntp.conf
+   regexp: '^server'
+   line: 'server 10.10.40.5 prefer'
+  when: group_names[0] == "dns-resolver" 
+
+ 
+- name: Enable service ntp
+  service:
+    name: ntp
+    enabled: yes  
+
+- name: set timezone to Africa/Porto-Novo
+  timezone:
+    name: Africa/Porto-Novo
+
+- name: Create ansible user with sudo access
+  user:
+     name: "{{ ansible_manager_user }}"
+     password: "{{ ansible_manager_user_pass  | password_hash('sha512') }}"
+     groups:
+     - sudo
+     state: present
+
+#- name: Create labs users (one for the specifig group device) with sudo access (read username/password from template)
+- name: Create manager account
+  user:
+     name: "{{ manager_user }}"
+     password: "{{ manager_user_pass | password_hash('sha512') }}"
+     groups:
+     - sudo
+     state: present
+  when: group_names[0] == "management"
+
+- name: Create dns-root account
+  user:
+     name: "{{ dns_root_user }}"
+     password: "{{ dns_root_user_pass  | password_hash('sha512') }}"
+     groups:
+     - sudo
+     state: present
+  when: group_names[0] == "dns-root" 
+
+- name: Create dns-registry account
+  user:
+     name: "{{ dns_registry_user }}"
+     password: "{{ dns_registry_user_pass   | password_hash('sha512') }}"
+     groups:
+     - sudo
+     state: present
+  when: group_names[0] == "dns-registry" 
+
+- name: Create dns-registrar account
+  user:
+     name: "{{ dns_registrar_user }}"
+     password: "{{ dns_registrar_user_pass  | password_hash('sha512')   }}"
+     groups:
+     - sudo
+     state: present
+  when: group_names[0] == "dns-registrar" 
+
+- name: Create dns-resolver account
+  user:
+     name: "{{ dns_resolver_user }}"
+     password: "{{ dns_resolver_user_pass  | password_hash('sha512')   }}"
+     groups:
+     - sudo
+     state: present
+  when: group_names[0] == "dns-resolver" 
+
+
+#- name: Secure ssh access (allowed user, no root, etc)
+#  blockinfile:
+#  path: /etc/ssh/sshd_config 
+#    backup: yes
+#    block: |
+#      AllowUsers {{ manager_user }} {{ ansible_manager_user }} {{ item }}
+#      PermitRootLogin no
+#    marker: "\r\n # {mark} ANSIBLE MANAGED BLOCK SSHD"
+#   with_items: 
+#    - "{{ dns_root_user }}"
+#    when: group_names[0] == "dns-root" 
+#    - "{{ dns_registry_user }}" 
+#    when: group_names[0] == "dns-registry" 
+#    - "{{ dns_registrar_user }}" 
+#    when: group_names[0] == "dns-registrar" 
+#    - "{{ dns_resolver_user }}" 
+#    when: group_names[0] == "dns-resolver" 
+
+#- name: Lock pi account
+#  user:
+#     name: "{{ ansible_ssh_user }}"
+#     password_lock: yes
+
+#- name: Set default iptables rules
+#  Ok, call me when going public

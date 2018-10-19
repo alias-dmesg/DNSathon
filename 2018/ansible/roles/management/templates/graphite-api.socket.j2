@@ -1,0 +1,11 @@
+# This is /lib/systemd/system/graphite-api.socket
+[Unit]
+Description=graphite-api socket
+
+[Socket]
+ListenStream=/run/graphite-api.sock
+ListenStream=127.0.0.1:{{ graphite_api_port }}
+
+[Install]
+WantedBy=sockets.target
+

@@ -1,0 +1,160 @@
+service timestamps debug datetime msec
+service timestamps log datetime msec
+no service password-encryption
+!
+hostname RHACKATON
+!
+boot-start-marker
+boot-end-marker
+!
+!
+!
+no aaa new-model
+!
+dot11 syslog
+ip source-route
+!
+!
+!
+!
+!
+ip cef
+no ip domain lookup
+no ipv6 cef
+!
+multilink bundle-name authenticated
+!
+crypto pki token default removal timeout 0
+!         
+!
+!
+!
+license udi pid CISCO1841 sn FCZ1404C0UC
+!
+redundancy
+!
+!
+! 
+!
+!
+!
+!
+!
+!
+interface FastEthernet0/0
+ description "TO INTERNET"
+ ip address 164.160.143.68 255.255.255.192
+ ip nat outside
+ ip virtual-reassembly in
+ duplex auto
+ speed auto
+!
+interface FastEthernet0/1
+ description "TO LAN"
+ no ip address
+ ip nat inside
+ ip virtual-reassembly in
+ duplex auto
+ speed auto
+!
+interface FastEthernet0/1.10
+ encapsulation dot1Q 10
+ ip address 10.10.10.1 255.255.255.0
+ ip nat inside
+ ip virtual-reassembly in
+!
+interface FastEthernet0/1.20
+ encapsulation dot1Q 20
+ ip address 10.10.20.1 255.255.255.0
+ ip nat inside
+ ip virtual-reassembly in
+!
+interface FastEthernet0/1.30
+ encapsulation dot1Q 30
+ ip address 10.10.30.1 255.255.255.0
+ ip nat inside
+ ip virtual-reassembly in
+!
+interface FastEthernet0/1.40
+ encapsulation dot1Q 40
+ ip address 10.10.40.1 255.255.255.0
+ ip nat inside
+ ip virtual-reassembly in
+!
+interface FastEthernet0/1.50
+ encapsulation dot1Q 50
+ ip address 10.10.50.1 255.255.255.0
+ ip nat inside
+ ip virtual-reassembly in
+!
+interface FastEthernet0/1.60
+ encapsulation dot1Q 60 native
+ ip address 10.10.60.1 255.255.255.0
+ ip nat inside
+ ip virtual-reassembly in
+!
+interface Serial0/0/0
+ no ip address
+ shutdown
+ clock rate 2000000
+!
+interface Serial0/0/1
+ no ip address
+ shutdown
+ clock rate 2000000
+!
+ip default-gateway 164.160.143.126
+ip forward-protocol nd
+no ip http server
+no ip http secure-server
+!
+!
+ip nat pool SNAT-10 10.10.10.0 10.10.10.255 netmask 255.255.255.0
+ip nat pool SNAT-20 10.10.20.0 10.10.20.255 netmask 255.255.255.0
+ip nat pool SNAT-30 10.10.30.0 10.10.30.255 netmask 255.255.255.0
+ip nat pool SNAT-40 10.10.40.0 10.10.40.255 netmask 255.255.255.0
+ip nat pool SNAT-50 10.10.50.0 10.10.50.255 netmask 255.255.255.0
+ip nat pool SNAT-60 10.10.60.0 10.10.60.255 netmask 255.255.255.0
+ip nat inside source list 10 interface FastEthernet0/0 overload
+ip nat inside source list 20 interface FastEthernet0/0 overload
+ip nat inside source list 30 interface FastEthernet0/0 overload
+ip nat inside source list 40 interface FastEthernet0/0 overload
+ip nat inside source list 50 interface FastEthernet0/0 overload
+ip nat inside source list 60 interface FastEthernet0/0 overload
+ip route 0.0.0.0 0.0.0.0 FastEthernet0/0
+!
+logging esm config
+access-list 10 permit 10.10.10.0 0.0.0.255
+access-list 20 permit 10.10.20.0 0.0.0.255
+access-list 30 permit 10.10.30.0 0.0.0.255
+access-list 40 permit 10.10.40.0 0.0.0.255
+access-list 50 permit 10.10.50.0 0.0.0.255
+access-list 60 permit 10.10.60.0 0.0.0.255
+!
+!
+!
+!
+snmp-server community public RW
+snmp-server contact Dnsathon
+snmp-server enable traps snmp linkdown linkup coldstart warmstart
+snmp-server host 10.10.60.5 version 2c public 
+!
+!
+control-plane
+!
+!
+line con 0
+ password cisco
+line aux 0
+line vty 0 4
+ password cisco
+ login
+ transport input all
+line vty 5 15
+ password cisco
+ login
+ transport input all
+!
+scheduler allocate 20000 1000
+end
+

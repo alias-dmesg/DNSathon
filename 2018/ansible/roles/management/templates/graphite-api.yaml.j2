@@ -1,0 +1,19 @@
+search_index: /var/lib/graphite-api/index
+finders:
+  - graphite_api.finders.whisper.WhisperFinder
+functions:
+  - graphite_api.functions.SeriesFunctions
+  - graphite_api.functions.PieFunctions
+whisper:
+  directories:
+    - /var/lib/graphite/whisper
+time_zone: {{ graphite_api_timezone }}
+allowed_origins:
+  - "{{ graphite_api_cors_hosts }}"
+carbon:
+  hosts:
+    - {{ carbon_host }}:{{ carbon_port }}
+  timeout: {{ carbon_timeout }}
+  retry_delay: {{ carbon_retry_delay }}
+  carbon_prefix: {{ carbon_prefix }}
+  replication_factor: {{ carbon_replication }}

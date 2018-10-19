@@ -1,0 +1,45 @@
+---
+# tasks file for sw-access
+ - name: Generate configuration files
+   ios_config:
+     src: access.j2
+
+ - name: Set VTP
+   ios_config:
+     lines:
+       - vtp domain {{ vtp_domain }}
+       - vtp mode client
+       - vtp version 2
+       - vtp pruning 
+       - vtp password {{ vtp_password }}
+
+ - name: Set SVIs
+   ios_config:
+     lines:
+       - ip address 10.10.{{ item.id }}.25 255.255.255.0
+       - shutdown # Yeah, I know
+     parents: interface vlan{{ item.id }}     
+     with_items: "{{ vlans }}"
+     when: item.id != 60
+
+ - name: Force management SVI to be up (required for Cisco 2950) 
+   ios_config:
+     lines:
+       - ip address 10.10.60.25 255.255.255.0
+       - no shutdown
+     parents: interface vlan60  
+
+ - name: Save configuration
+   ios_config: 
+     save: yes
+
+ - name: Get new config
+   ios_config:
+     commands: 
+       - show run
+     register: config
+
+ - name: Save new config
+   copy:
+    content: "{{ config.stdout[0] }}"
+    dest: "{{ role_path }}/sw-access/files/sw-access_config-{{ timestamp }}.txt" 

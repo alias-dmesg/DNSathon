@@ -1,0 +1,29 @@
+---
+# tasks file for resolver
+  # Get root hint from custom root
+
+ # Install and configure Unbound/Bind/PowerDNS resolver
+ - name: Install nginx
+   apt: name=nginx-full state=latest
+   become: yes
+ # Update root hint
+ # Disable DNSSEC validation
+
+ # Load custom root zone file in resolver
+
+  # Get domain from registrar
+
+  # Create custom website (one page) for each domain
+
+ # Install webserver
+ - name: Install nginx
+   apt: name=nginx-full state=latest
+   become: yes
+
+  # Test domain access
+
+  # Fetch custom KSK
+
+  # Enable custom KSK for DNSSEC validation
+
+  # Test DNSSEC validation

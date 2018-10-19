@@ -1,0 +1,16 @@
+vlans:
+   - { id: 10, name: dns-root }
+   - { id: 20, name: dns-registry }
+   - { id: 30, name: dns-registrar }
+   - { id: 40, name: dns-resolver }
+   - { id: 50, name: documentation }
+   - { id: 60, name: management }
+
+domain: "dnsathon"
+
+snmp_community: dnsathon
+snmp_contact: "Noc DNSathon"
+snmp_host: 10.10.60.5
+
+timestamp: "{{lookup('pipe', 'date +%Y%m%d%H%M%SZ')}}"
+

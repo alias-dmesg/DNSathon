@@ -1,0 +1,20 @@
+---
+# vars file for common
+ansible_manager_user: ansible
+ansible_manager_user_pass: AUT0M@t10n
+
+manager_user: admin
+manager_user_pass: s04DM1N 
+
+dns_root_user: dns_root
+dns_root_user_pass: Dns/R0@T 
+
+dns_registry_user: dns_registry
+dns_registry_user_pass: Dns/R3G1STR!
+
+dns_registrar_user: dns_registrar
+dns_registrar_user_pass: Dns/R3G1STR@R
+
+dns_resolver_user: dns_resolver
+dns_resolver_user_pass: Dns/R3S0LV3R
+
