@@ -9,8 +9,8 @@ In each subdirectory contains the materials submitted and archived by the partic
 ### Network ###
 We have used Cisco devices:
 * Swithes:
- * Access: Cisco WS-C2950T-24 Catalyst 2950 24 Ports 
- * Noc: Cisco WS-C2960-24TC-S 2960 Series 24 Port
+  - Access: Cisco WS-C2950T-24 Catalyst 2950 24 Ports 
+  - Noc: Cisco WS-C2960-24TC-S 2960 Series 24 Port
 * Router: 1800 Series
 Patch cables has been used to connect all components: Raspberry-Pi, team member laptop, switches and router. Network management has been handle by Infrastructure team. 
 
@@ -41,9 +41,6 @@ An addtional **Management** Pi has been added to server as:
 * DNS resolver (infrastructure)
 * Monitoring
 * Statistics
-
-##### Management Collected Stats #####
-![Infrastructure Overview](https://raw.githubusercontent.com/AlfredArouna/DNSathon/master/2018/dnsathon.png)
 
 
 
@@ -151,11 +148,17 @@ DNShathon draft is available  ![here](https://raw.githubusercontent.com/AlfredAr
 
 
 ## Management Collected Stats ##
+### DNS Queries per team ###
 ![DNS queries per group](https://raw.githubusercontent.com/AlfredArouna/DNSathon/master/2018/01_dns_traffic_per_group.png)
+### Total DNS Queries ###
 ![Total DNS queries](https://raw.githubusercontent.com/AlfredArouna/DNSathon/master/2018/02_dns_queries.png)
+### DNS Responses ###
 ![DNS responses code](https://raw.githubusercontent.com/AlfredArouna/DNSathon/master/2018/03_dns_responses.png)
+### DNS Responses Type ###
 ![DNS responses type](https://raw.githubusercontent.com/AlfredArouna/DNSathon/master/2018/04_dns_replies.png)
+### DNS Cached vs Forwarded ###
 ![DNS Cached vs Forwarded](https://raw.githubusercontent.com/AlfredArouna/DNSathon/master/2018/05_dns_cache_forwarded.png)
+### Global Network Latency ###
 ![Network Latency](https://raw.githubusercontent.com/AlfredArouna/DNSathon/master/2018/06_ping_latency.png)
 
 ## Support & Logistiq ##
