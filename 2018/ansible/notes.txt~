@@ -1,6 +1,0 @@
-1 - Update host /etc/hosts file with content from ansible/etc/hosts file
-2 - Create ansible roles with  ansible-galaxy init --init-path roles role_names
-
-sudo dd bs=4M if=2018-04-18-raspbian-stretch.img of=/dev/sdX status=progress conv=fsync
-
-sudo dd bs=4M if=/dev/mmcblk0p1 of=/dev/sda status=progress conv=fsync
