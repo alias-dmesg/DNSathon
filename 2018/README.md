@@ -75,7 +75,7 @@ With servers, we will offer DNS services, such as:
 
 
 ## Actitivies Report (draft) ##
-DNShathon draft is available  ![here](https://raw.githubusercontent.com/AlfredArouna/DNSathon/master/2018/dnsathon_activities_report_draft.pdf)
+DNShathon draft is available  [here](https://raw.githubusercontent.com/AlfredArouna/DNSathon/master/2018/dnsathon_activities_report_draft.pdf)
 
 ## Teams ##
 
