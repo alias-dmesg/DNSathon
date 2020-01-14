@@ -1,0 +1,466 @@
+---
+# tasks file for management
+
+# - name: test interfaces
+#   #command: echo {{item }}
+#   #loop: "{{ groups['network']  | map('extract', hostvars, ['ansible_host'] ) | list  }} "
+#   command: echo {{ groups['network']  | map('extract', hostvars, ['ansible_host'] ) | list }} 
+#
+# - name: Set Hostname
+#   hostname:
+#     name: "{{ ansible_hostname }}.{{ domain }}"
+#
+# - name: Fix /etc/hosts 
+#   lineinfile:
+#    state: present
+#    path: /etc/hosts
+#    regexp: "^{{ ansible_host }}"
+##    line: "{{ ansible_default_ipv4.address }} {{ inventory_hostname }} {{ ansible_hostname }} {{ management_hostname }}"
+#    line: "{{ ansible_host }} {{ inventory_hostname }} {{ ansible_hostname }} {{ ansible_hostname }}.{{ domain }}"
+
+
+  # Configure vlan interfaces
+  # Make sure the router handle intervlan routing and default gw
+  # But no DHCP
+
+ - name: Add the 802.1q module
+   modprobe:
+    name: 8021q
+
+ - name: Install syslog server
+   apt: name=rsyslog state=latest
+   become: yes
+
+ - name: Configure syslog server
+   template:
+    backup: yes
+    src: rsyslog.j2
+    dest: /etc/rsyslog.d/50-dnsathon.conf 
+
+ - name: Restart Syslog server
+   service:
+    name: syslog
+    state: restarted
+
+ - name: Configure ntp server client access
+   lineinfile:
+    backup: yes
+    path: /etc/ntp.conf
+    line: 'restrict 10.10.{{ item.id }}.0 mask 255.255.255.0 nomodify notrap'
+   with_items: "{{ vlans }}" 
+
+ - name: Install dig tool
+   apt: name=dnsutils state=latest
+   become: yes
+
+ - name: insert/update Vlans interfaces in /etc/network/interfaces 
+   blockinfile:
+    path: /etc/network/interfaces
+    backup: yes
+    block: |
+      auto eth0.{{ item.id }}
+      iface eth0.{{ item.id }} inet manual
+          vlan-raw-device eth0
+    marker: "# {mark} ANSIBLE MANAGED BLOCK INTERFACE VLAN-{{ item.id }}"
+   with_items: "{{ vlans }}"
+   when: item.id != 60
+
+ - name: insert/update Vlans interfaces in /etc/dhcpcd.conf 
+   blockinfile:
+    path: /etc/dhcpcd.conf 
+    backup: yes
+    block: |
+      interface eth0.{{ item.id }}
+      static ip_address=10.10.{{ item.id  }}.5/24
+      static router=10.10.{{ item.id  }}.1
+      static domain_name_servers=127.0.0.1
+    marker: "# {mark} ANSIBLE MANAGED BLOCK INTERFACE VLAN-{{ item.id }}"
+   with_items: "{{ vlans }}"
+   when: item.id != 60
+
+
+ # Install and Configure Unbound listen on 5300
+ - name: Install Unbound
+   apt: name=unbound state=latest    
+   become: yes
+
+ - name: Download root.hints
+   get_url:
+    backup: yes
+    url: https://www.internic.net/domain/named.root
+    dest: "{{ unbound_dir }}/root.hints"
+    mode: 0440
+    group: unbound
+    owner: unbound
+
+ - name: Add root hints and access control to unbound
+   template:
+    backup: yes
+    src: unbound.j2
+    dest: "{{ unbound_dir }}/unbound.conf.d/dnshathon.conf"
+
+ #  DNSdist installation
+ - name: Install dnsdist
+   apt: name=dnsdist state=latest    
+   become: yes
+
+ - name: Configure newServer for dnsdist
+   lineinfile:
+    backup: yes
+    path: "{{ dnsdist_config }}/dnsdist.conf"
+    create: yes
+    regexp: '^newServer'
+    # Forward to unbound
+    line: 'newServer("127.0.0.1:5300")'
+
+ - name: Add Local forwarder for dnsdist
+   lineinfile:
+    backup: yes
+    path: "{{ dnsdist_config }}/dnsdist.conf"
+    line: addLocal("10.10.{{ item.id }}.5")
+   with_items: "{{ vlans }}"
+
+ - name: Listen to local IPv4
+   lineinfile:
+    backup: yes
+    path: "{{ dnsdist_config }}/dnsdist.conf"
+    line: addLocal("127.0.0.1")
+
+ - name: Listen to local IPv6
+   lineinfile:
+    backup: yes
+    path: "{{ dnsdist_config }}/dnsdist.conf"
+    line: addLocal("::1")
+
+   # Install and configure pihole: use router as GW and dnsdist as resolver
+ - name: Download Pi-Hole installer
+   get_url:
+    url: https://install.pi-hole.net
+    dest: /root/install-pihole.sh
+    mode: 0740
+
+ - name: Create pihole configuration directory
+   become: yes
+   file:
+    name: "{{ pihole_config_path }}"
+    state: directory
+    mode: 0755
+
+ - name: Create pihole configuration
+   become: yes
+   template:
+    src: "setupVars.conf.j2"
+    dest: "{{ pihole_config_path }}/setupVars.conf"
+    mode: 0644
+
+ - name: Restart service dhcpcd
+   service:
+    name: dhcpcd
+    state: restarted
+
+ - name: Restart service unbound
+   service:
+    name: unbound
+    enabled: yes
+    state: restarted
+
+ - name: Restart service dnsdist
+   service:
+    name: dnsdist
+    enabled: yes
+    state: restarted
+
+ - name: Install Pi-Hole
+   shell: "/root/install-pihole.sh --unattended"
+
+ - name: Set PiHole to update every week
+   become: yes
+   replace:
+    path: /etc/cron.d/pihole
+    regexp: '^#(.*updatePihole.*)$'
+    replace: '\1'
+    backup: yes
+
+ - name: Add custom config for pihole
+   template:
+    backup: yes
+    src: pihole.conf.j2
+    dest: "{{ dnsmasq_dir}}/00-dnshaton.conf"
+
+ - name: Add custom blocklist
+   become: yes
+   copy:
+    src: "freek_ws_blocklist"   
+    dest: "{{ pihole_config_path }}/free_ws_blocklist.txt"
+    mode: 0644
+    backup: yes
+
+ - name: Enable custom blocklist
+   become: yes
+   shell: cat  "{{ pihole_config_path }}/free_ws_blocklist.txt" >>   "{{ pihole_config_path }}/adlists.list"
+
+ - name: ensure file dhcp.lease exists
+   copy:
+    content: ""
+    dest: /etc/pihole/dhcp.leases    
+    force: yes
+    group: "{{ pihole_group }}"
+    owner: "{{ pihole_user }}"
+    mode: 0644
+    state: present
+
+ - name: ensure file dnsmasq.lease exists
+   copy:
+    content: ""
+    dest: /var/lib/misc/dnsmasq.leases 
+    force: yes
+    group: "{{ pihole_group }}"
+    owner: "{{ pihole_user }}"
+    mode: 0644
+    state: present
+
+ - name: Restart service pihole
+   service:
+    name: pihole-FTL    
+    enabled: yes
+    state: restarted
+
+ - name: Use pihole instead of Unbound in dnsdist
+   lineinfile:
+    backup: yes
+    path: "{{ dnsdist_config }}/dnsdist.conf"
+    create: yes
+    regexp: '^newServer'
+    # Forward to pihole
+    line: 'newServer("127.0.0.1:5353")'
+ 
+ - name: Restart service dnsdist
+   service:
+    name: dnsdist
+    enabled: yes
+    state: restarted
+
+ # Install graphite/carbon for dnsdist stats
+ - name: Install carbon
+   apt: name=graphite-carbon state=latest
+   become: yes
+
+  # Install graphite-api for dnsdist stats
+ - name: Install Graphite-api
+   apt: name=graphite-api state=latest
+   become: yes
+
+ # Install graphite-api for dnsdist stats
+ - name: Install Graphite-api Ginucorn
+   apt: name=gunicorn3 state=latest
+   become: yes
+ 
+ # Update dnsdist config
+ - name: Send dnsdist metric to carbon
+   lineinfile:
+    backup: yes
+    path: "{{ dnsdist_config }}/dnsdist.conf"
+    create: yes
+    # Forward metric to carbon
+    line: "carbonServer('127.0.0.1', 'dnsloadbalancer', 30)"
+
+ - name: Restart service dnsdist
+   service:
+    name: dnsdist
+    enabled: yes
+    state: restarted
+       
+ # Configure Graphite API
+ - name: Configure graphite-api
+   template:
+    backup: yes
+    src: graphite-api.yaml.j2
+    dest: /etc/graphite-api.yaml
+    
+ - name: Configure graphite-api socket service
+   template:
+    backup: yes
+    src: graphite-api.socket.j2
+    dest: /lib/systemd/system/graphite-api.socket
+
+ - name: Configure graphite-api server service
+   template:
+    backup: yes
+    src: graphite-api.service.j2
+    dest: /etc/systemd/system/multi-user.target.wants/graphite-api.service
+
+ - name: Restart service carbon
+   service:
+    name: carbon-cache
+    enabled: yes
+    state: restarted
+
+ - name: Reload Systemd
+   become: yes
+   shell: systemctl daemon-reload
+
+ - name: Restart service graphite-api-socket
+   service:
+    name: graphite-api.socket
+    enabled: yes
+    state: restarted
+
+ - name: Restart service graphite-api
+   service:
+    name: graphite-api
+    #enabled: yes
+    state: restarted
+
+
+  # Install and configure influxdb
+ - name: Install InfluxDb
+   apt: name=influxdb state=latest
+   become: yes
+
+ # Install influxdb-client
+ - name: Install InfluxDd-client
+   apt: name=influxdb-client state=latest
+   become: yes
+
+
+ - name: Install pip
+   apt: name=python-pip state=latest
+   become: yes
+
+ - name: Install influxdb dependencies requests
+   pip:
+    name: requests
+    state: present
+
+ - name: Install influxdb dependencies python-influxdb
+   apt: name=python-influxdb state=latest
+   become: yes
+
+ - name: Create database
+   influxdb_database:
+    hostname: "{{influxdb_ip_address}}"
+    database_name: "{{ item }}"
+   with_items: "{{ influxdb_databases }}"
+
+ - name: Load metric script
+   become: yes
+   template:
+    src: "pihole_stats.j2"
+    dest: "/etc/pihole/pihole_stats.py"
+    mode: 0644
+
+ - name: Run cron job for pihole stats
+   lineinfile:
+    backup: yes
+    path: "/etc/cron.d/pihole"
+    line: "*/1 * * * * root python /etc/pihole/pihole_stats.py"
+
+ # Download Grafana
+ - name: Download Grafna installer
+   get_url:
+    url:  https://s3-us-west-2.amazonaws.com/grafana-releases/release/grafana_5.2.4_armhf.deb     
+    dest: /root/grafana_5.2.4_armhf.deb     
+    mode: 0740
+
+ - name: Add libfontconfig 
+   #shell: apt-get install -y adduser libfontconfig   
+   apt: name=libfontconfig state=latest
+
+ - name: Install Grafana package
+   apt:
+    deb:  /root/grafana_5.2.4_armhf.deb  
+
+ #- name: Install Grafana
+ #  become: yes
+ #  shell: dpkg -i /root/grafana_5.2.4_armhf.deb 
+
+ - name: Restart service grafana
+   service:
+    name: grafana-server
+    enabled: yes
+    state: restarted
+
+ # Telegraf for snmp traffic from switches and router
+ - name: Install snmp
+   apt: name=snmp state=latest
+   become: yes
+
+ - name: Install snmp-mibs-downloader   
+   apt: name=snmp-mibs-downloader state=latest
+   become: yes
+
+ - name: Download Telegraf Binary
+   get_url:
+    url:  https://dl.influxdata.com/telegraf/releases/telegraf-1.8.1_linux_armhf.tar.gz   
+    dest: /root/telegraf-1.8.1_linux_armhf.tar.gz  
+    mode: 0740
+
+ - name:  Uncompress Telegraf
+   unarchive:
+    remote_src: yes
+    src: /root/telegraf-1.8.1_linux_armhf.tar.gz
+    dest: "{{ telegraf_folder }}"
+
+ - name: Copy telegraf binary
+   copy:
+    remote_src: yes
+    src: "{{  telegraf_folder }}/usr/bin/telegraf"   
+    dest: "/usr/bin/telegraf"
+    mode: 0755
+    backup: yes
+
+ - name: Create telegraf etc
+   become: yes
+   file:
+    name: "{{ telegraf_etc }}"
+    state: directory
+    mode: 0755
+
+ - name: Copy telegraf default etc
+   copy:
+    remote_src: yes
+    src: "{{ telegraf_folder }}/etc/telegraf/telegraf.conf"   
+    dest: "/etc/telegraf/telegraf.conf"
+    mode: 0644
+    backup: yes
+
+ - name: Create telegraf account
+   user:
+     name: "{{ telegraf_user }}"
+     system: yes
+     state: present
+
+ - name: Create telegraf log
+   become: yes
+   file:
+    name: "{{ telegraf_var }}"
+    state: directory
+    mode: 0755
+    group: "{{ telegraf_user }}"
+    owner: "{{ telegraf_group }}"
+
+ - name: Copy telegraf systemd startup
+   copy:
+    remote_src: yes
+    src: "{{ telegraf_folder }}/usr/lib/telegraf/scripts/telegraf.service"   
+    dest: "/etc/systemd/system/telegraf.service"
+    mode: 0644
+    backup: yes
+
+ - name: Reload Systemd
+   become: yes
+   shell: systemctl daemon-reload
+
+ - name: Add custom config to telegraph
+   template:
+    backup: yes
+    src: telegraf.j2
+    dest: "{{ telegraf_etc }}/dnsathon.conf"
+
+ - name: Enable service telegraf
+   service:
+    name: telegraf    
+    enabled: yes
+    state: restarted
+
+ # Load custom dashboard 

@@ -1,0 +1,147 @@
+---
+# tasks file for registry
+
+
+ # Install curl
+ - name: Install curl
+   apt: name=curl state=latest
+   become: yes
+
+#
+# # Install and configure PowerDNS Authoritative with dependencies
+# # Use powerdns repos
+# - name: Add PowerDns repository
+#   lineinfile:
+#    backup: yes
+#    state: present
+#    create: yes
+#    path: /etc/apt/sources.list.d/pdns.list
+#    line: "deb http://repo.powerdns.com/raspbian jessie-auth-40 main"
+#
+# - name: Add PowerDns preference repository
+#   blockinfile:
+#    state: present
+#    create: yes
+#    path: /etc/apt/preferences.d/pdns
+#    backup: yes
+#    block: |
+#      Package: pdns-*
+#      Pin: origin repo.powerdns.com
+#      Pin-Priority: 600      
+#    marker: "# {mark} ANSIBLE MANAGED BLOCK PREFERENCE "
+#
+# - name: Get PowerDNS key
+##   shell: "curl https://repo.powerdns.com/CBC8B383-pub.asc | sudo apt-key add - &&"
+#   apt_key: 
+#    #url: https://repo.powerdns.com/CBC8B383-pub.asc
+#    url: https://repo.powerdns.com/FD380FBB-pub.asc
+#    state: present
+#
+# - name: Update packages list
+#   apt: update_cache=yes
+#   become: yes
+#
+# - name: Upgrade packages
+#   apt: upgrade=safe
+#   become: yes
+
+ # Install powerdns authoritative server
+ - name: Install pdns-server
+   apt: name=pdns-server state=latest
+   become: yes
+
+ # Install powerdns authoritative server backend
+ - name: Install pdns-backend-mysql
+   apt: name=pdns-backend-mysql state=latest
+   become: yes
+
+
+ - name: Configuring powerdns
+   template:
+    src: "pdns.conf.j2"
+    dest: "/etc/powerdns/pdns.conf"
+
+ # Install Mysql backend
+ - name: Install MariadDb Server
+   apt: name=mariadb-server state=latest
+   become: yes
+
+ # Install Mysql backend
+ - name: Install MariadDb Client
+   apt: name=mariadb-client state=latest
+   become: yes
+
+ - name: pdns_server | creating powerdns db
+   mysql_db:
+    name: "{{ pdns_db_name }}"
+    state: "present"
+    
+ - name: pdns_server | creating powerdns user
+   mysql_user:
+    name: "{{ pdns_db_user }}"
+    password: "{{ pdns_db_pass }}"
+    priv: "{{ pdns_db_name }}.*:ALL"
+    state: present
+
+ - name: pdns_server | copying db schema file
+   copy:
+    src: "mysql_db_schema.sql"
+    dest: "/root"
+    
+ - name: pdns_server | importing db schema
+   mysql_db:
+    name: "{{ pdns_db_name }}"
+    state: "import"
+    target: "/root/mysql_db_schema.sql"
+
+ - name: Add custom Config for MariaDb
+   become: yes
+   copy:
+    src: "dnsathon.cnf"   
+    dest: "/etc/mysql/"
+    mode: 0644
+    backup: yes
+
+
+
+
+ # Enable Json API
+ 
+ - name: Ensuring pdns service is enabled
+   service:
+    name: pdns-server
+    enabled: yes
+    status: restarted
+
+
+
+
+ # Install webserver to easier zone management
+ - name: Install nginx
+   apt: name=nginx-full state=latest
+   become: yes
+
+
+ # Configure PowerAdmin
+ - name: Download PowerAdmin
+   get_url:
+    backup: yes
+    url:   https://github.com/poweradmin/poweradmin/archive/v2.1.4.tar.gz
+    dest: "/root/poweradmin-v2.1.4.tar.gz"
+    mode: 0644
+
+ - name:  Uncompress PowerAdmin
+   unarchive:
+    remote_src: yes
+    src: /root/poweradmin-v2.1.4.tar.gz
+    dest: /var/www/html/poweradmin
+
+ # Continue on web Interface
+
+  # Create custom zones
+
+  # Delegate zones to registrar or not
+
+  # Enable powerdns API or implement EPP
+
+  # Allow customer (registrar) to create zones

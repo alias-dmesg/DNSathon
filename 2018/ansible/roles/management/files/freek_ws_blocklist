@@ -1,0 +1,40 @@
+# {{ ansible_managed }}
+## Custom Pi-hole ad-list sources by Freek.ws - Updated 06/04/2018 ##
+######## Checkout my free Public Pi-hole Services @ Freek.ws ########
+## https://pastebin.com/raw/dEahSm4Z
+https://raw.githubusercontent.com/StevenBlack/hosts/master/hosts 	
+https://mirror1.malwaredomains.com/files/justdomains 	
+http://sysctl.org/cameleon/hosts 	
+https://zeustracker.abuse.ch/blocklist.php?download=domainblocklist 	
+https://s3.amazonaws.com/lists.disconnect.me/simple_tracking.txt 	
+https://s3.amazonaws.com/lists.disconnect.me/simple_ad.txt 	
+https://hosts-file.net/ad_servers.txt 	
+https://raw.githubusercontent.com/crazy-max/WindowsSpyBlocker/master/data/hosts/win10/spy.txt 	
+https://raw.githubusercontent.com/quidsup/notrack/master/trackers.txt 	
+https://raw.githubusercontent.com/reek/anti-adblock-killer/master/anti-adblock-killer-filters.txt 	
+https://raw.githubusercontent.com/Dawsey21/Lists/master/main-blacklist.txt 	
+https://raw.github.com/notracking/hosts-blocklists/master/hostnames.txt 	
+https://raw.githubusercontent.com/AdAway/adaway.github.io/master/hosts.txt 	
+http://v.firebog.net/hosts/Easylist.txt 	
+http://v.firebog.net/hosts/Airelle-trc.txt 	
+http://v.firebog.net/hosts/Easyprivacy.txt 	
+http://v.firebog.net/hosts/Airelle-hrsk.txt 	
+https://s3.amazonaws.com/lists.disconnect.me/simple_malvertising.txt 	
+https://hosts-file.net/exp.txt 	
+https://hosts-file.net/emd.txt 	
+https://hosts-file.net/psh.txt 	
+https://mirror.cedia.org.ec/malwaredomains/immortal_domains.txt 	
+https://www.malwaredomainlist.com/hostslist/hosts.txt 	
+https://bitbucket.org/ethanr/dns-blacklists/raw/8575c9f96e5b4a1308f2f12394abd86d0927a4a0/bad_lists/Mandiant_APT1_Report_Appendix_D.txt 	
+https://openphish.com/feed.txt 	
+https://ransomwaretracker.abuse.ch/downloads/RW_DOMBL.txt 	
+https://raw.githubusercontent.com/CHEF-KOCH/BarbBlock-filter-list/master/HOSTS.txt 	
+https://raw.githubusercontent.com/ZeroDot1/CoinBlockerLists/master/hosts_browser 	
+https://raw.githubusercontent.com/CHEF-KOCH/Canvas-Font-Fingerprinting-pages/master/Canvas.txt 	
+https://raw.githubusercontent.com/CHEF-KOCH/WebRTC-tracking/master/WebRTC.txt 	
+https://raw.githubusercontent.com/CHEF-KOCH/Audio-fingerprint-pages/master/AudioFp.txt 	
+https://raw.githubusercontent.com/CHEF-KOCH/Canvas-fingerprinting-pages/master/Canvas.txt 	
+https://v.firebog.net/hosts/static/w3kbl.txt
+# Added 6-4-2018:
+https://raw.githubusercontent.com/Perflyst/PiHoleBlocklist/master/SmartTV.txt
+https://raw.githubusercontent.com/Perflyst/PiHoleBlocklist/master/android-tracking.txt

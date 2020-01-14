@@ -1,0 +1,167 @@
+version 15.0
+no service pad
+service timestamps debug datetime msec
+service timestamps log datetime msec
+no service password-encryption
+!
+hostname switch-core
+!
+boot-start-marker
+boot-end-marker
+!
+enable password cisco
+!
+no aaa new-model
+system mtu routing 1500
+!
+!
+!
+!
+!
+!
+!
+!
+!
+!
+spanning-tree mode pvst
+spanning-tree extend system-id
+!
+vlan internal allocation policy ascending
+!
+!
+!
+!
+!
+!
+interface FastEthernet0/1
+ switchport trunk native vlan 60
+ switchport mode trunk
+!
+interface FastEthernet0/2
+ switchport access vlan 10
+ switchport mode access
+!
+interface FastEthernet0/3
+ description root-1
+ switchport access vlan 10
+ switchport mode access
+!
+interface FastEthernet0/4
+ description root-2
+ switchport access vlan 10
+ switchport mode access
+!
+interface FastEthernet0/5
+ description registry-1
+ switchport access vlan 20
+ switchport mode access
+!
+interface FastEthernet0/6
+ description registry-2
+ switchport access vlan 20
+ switchport mode access
+!
+interface FastEthernet0/7
+ description registrar-1
+ switchport access vlan 30
+ switchport mode access
+!
+interface FastEthernet0/8
+ description registrar-2
+ switchport access vlan 30
+ switchport mode access
+!
+interface FastEthernet0/9
+ description resolver
+ switchport access vlan 40
+ switchport mode access
+!
+interface FastEthernet0/10
+ description resolver-2
+ switchport access vlan 40
+ switchport mode access
+!
+interface FastEthernet0/11
+ description comm-1
+ switchport access vlan 50
+ switchport mode access
+!
+interface FastEthernet0/12
+ description comm-2
+ switchport access vlan 50
+ switchport mode access
+!
+interface FastEthernet0/13
+ description Cascade_SW_Access
+ switchport trunk native vlan 60
+ switchport mode trunk
+!
+interface FastEthernet0/14
+!
+interface FastEthernet0/15
+!
+interface FastEthernet0/16
+!
+interface FastEthernet0/17
+!
+interface FastEthernet0/18
+!
+interface FastEthernet0/19
+!
+interface FastEthernet0/20
+!
+interface FastEthernet0/21
+!
+interface FastEthernet0/22
+!
+interface FastEthernet0/23
+ switchport trunk native vlan 60
+ switchport mode trunk
+!
+interface FastEthernet0/24
+ switchport trunk native vlan 60
+ switchport mode trunk
+!
+interface GigabitEthernet0/1
+!
+interface GigabitEthernet0/2
+!         
+interface Vlan1
+ no ip address
+!
+interface Vlan10
+ ip address 10.10.10.2 255.255.255.0
+!
+interface Vlan20
+ ip address 10.10.20.2 255.255.255.0
+!
+interface Vlan30
+ ip address 10.10.30.2 255.255.255.0
+!
+interface Vlan40
+ ip address 10.10.40.2 255.255.255.0
+!
+interface Vlan50
+ ip address 10.10.50.2 255.255.255.0
+!
+interface Vlan60
+ ip address 10.10.60.20 255.255.255.0
+!
+ip http server
+ip http secure-server
+snmp-server community public RW
+snmp-server contact Dnsathon
+snmp-server enable traps snmp linkdown linkup coldstart warmstart
+snmp-server host 10.10.60.5 version 2c public 
+!
+!
+line con 0
+line vty 0 4
+ password cisco
+ login    
+line vty 5 15
+ password cisco
+ login
+!
+end
+

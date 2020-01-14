@@ -1,0 +1,21 @@
+---
+# vars file for sw-access
+interface: FastEthernet0
+trunks:
+  - id: 24
+    mgmt: "{{ vlans[5].id }}"
+    desc: "Noc Switch"
+  - id: 23
+    mgmt: "{{ vlans[5].id }}"
+    desc: "Backup Noc Switch"
+  - id: 22
+    mgmt: "{{ vlans[5].id }}"
+    desc: "Backup Noc Switch"
+  - id: 21
+    mgmt: "{{ vlans[5].id }}"
+    desc: "Backup Noc Switch"
+
+
+
+ports_number: 20 # 24 - 4 (management)
+ports_number_per_group: 4 # 20/5 vlans

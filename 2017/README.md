@@ -7,13 +7,13 @@ In each subdirectory contains the materials submitted and archived by the partic
 ## Infrastructure ##
 
 ### Network ###
-We have used two Cisco-XXXX swicthes and one Mikrotik-XXX as router. Patch cable has been used to connect all components: Raspberry-pi, team member laptop, switches and routers. 
+We have used two Cisco Catalyst 2950 switches and one Mikrotik RB2011UiAS-2HnD-IN as router. Patch cable has been used to connect all components: Raspberry-Pi, team member laptop, switches and router. 
 
 #### Transit ####
-International connectivity has been assured by our gold sponsor SudTelecom.
+International connectivity has been assured by the sponsor Sud Telecom.
 
 #### Servers #####
-We use Raspberry-Pi 3-XX as server. For each server, we assign IP based on following IP adressing plan:
+For each server, we assign IP based on following IP adressing plan:
 
 
 | Id | Role | # | Hostname | IP | GW | Vlan | Resolvers |
@@ -32,30 +32,84 @@ In a nutshell, we have setup following network design
 ![Infrastructure Overview](https://raw.githubusercontent.com/AlfredArouna/DNSathon/master/2017/bdf_hackathon.jpg)
 
 
-
 ### Servers ###
 
 #### Materials ####
+We use Raspberry-Pi 3 Model B as servers. For each one, we use the default pre-installed OS: `Raspbian`. 
 
 #### Services ####
+With servers, we will offer DNS services, such as:
+* Root
+* Registries
+* Registrars
+* Resolvers
 
 
 ## Teams ##
 
+### Communication ###
+* ***KOTTIN Caroline Marie***
+* AGUIAR Morel
+* FOLAHAN Didier
+* OUSSOUGOE Fabrice
+
 ### Root ####
+* ***BASSABI Falilou***
+* HOUGNI Bouraïma
+* TONAMON Florent
+* AHLONSOU Ruben
+* HOUINSOU Joanie
+* AWOU Kossi
+* MADY Sara 
 
 ### Registry ###
+#### Registry-1 ####
+* ***DOHETO H. Frédéric G***
+* AGOSSA S. Emmanuel
+* KEDAGNI Elgort
+* BOBO Andil
+* DANGBE Romuald
+
+#### Registry-2 ####
+* ***LETCHEDE Raoul***
+* AYENA Edgar
+* ALASSANE Malick
+* ADONON Aquilas
 
 ### Registrars ###
+#### Registrar-1 ####
+* ***ACHADE Charbel***
+* QUENUM Osée 
+* ELEGBA Venance
+* BOTON Madjid 
+* AHOUISSOUSSI Murielle
+
+#### Registrar-2 ####
+* ***SESSOU Géraud***
+* ABOH Melvina
+* DOSSOU Israel
+* DOVI Hortense
+* SEMASSA Luc
 
 ### ISP (Resolvers) ###
+#### ISP-1 ####
+* ***ADAM Fofana Taofic***
+* FAYOMI Horace
+* ASSOGBA Richmir
+* LEADI Samad
+* KAKPO Alves
+* ADJIN Fructueux
 
-### Communication ###
-
+#### ISP-2 ####
+* ***AHOUANSOU Lieben***
+* AGBAKOU Jean-Baptiste
+* AHOUANSOU Lieben
+* ALOHOUTADE Ronald
+* HOUNKPONOU Sidoine
 
 ## Support & Logistiq ##
 * Mr. Yaovi Atohoun
 * Mr. Carl Aniambossou, DC & Ms. (from SudTelecom)
 * Hotel KTA ?
 * BDF 2017 Team (Yazid, Jeremy, Ramanou, Mathias, Muriel, Harold, etc)
-* Alfred
+* Alfred (coach)

@@ -1,0 +1,48 @@
+# {{ ansible_managed }}
+
+server:
+    # Root hints
+    root-hints: "/etc/unbound/root.hints"
+    # Listenon 5300 so Dnsdist could listen on 53
+    port: 5300
+    # Listen on localhost
+    interface: 127.0.0.1
+    interface: ::1
+    access-control: ::1 allow_snoop
+    access-control: 127.0.0.1/8 allow_snoop
+    verbosity: 3
+    hide-identity: yes
+    hide-version: yes
+
+
+    {#
+    {% for group in groups['all'] %}
+     {% for host in group %}
+       hostvars[host]['ansible_host']
+       break
+     {% endfor %}
+    {% endfor %}
+    #}
+    {#
+    {% set ip_list = [] %}
+    {% for ip in groups['all']  | map('extract', hostvars, ['ansible_host'] ) | list  %}
+    {% set net = ip.split('.') %}
+    {% set netfull =   '.'.join(net[:-1])+'.0/24' %}
+    {% if netfull not in ip_list %}
+    {{ ip_list.append(netfull) }}
+    access-control: {{ netfull }} allow_snoop
+    interface:  '.'.join(net[:-1])+'.5' 
+    {% endif %}
+    {% endfor %}
+    #}
+    {# 
+    {% for vlan in vlans %}
+    {% set ip_list = [] %}
+    {% if 10.10.{{ vlan }}.5 not in ip_list %}
+    {{ ip_list.append(10.10.vlan.5) }}
+    access-control: 10.10.{{ vlan }}.0/24 allow_snoop
+    interface:  10.10.{{ vlan }}.5 
+    {% endif %}
+    {% end for %} 
+    #}
+

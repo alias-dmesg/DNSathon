@@ -1,0 +1,23 @@
+---
+# tasks file for root
+  # Install and configure nsd
+ - name: Install nsd
+   apt: name=nsd state=latest
+   become: yes
+
+  # create custom root hint, use own server as NS
+
+  # Install and configure webserver
+ - name: Install nginx
+   apt: name=nginx-full state=latest
+   become: yes
+
+
+  # Publish custom root zone on web page
+
+  # Use resolver team resolver IP for dns resolution
+
+  # Sign zone
+ 
+  # Publish KSK on web server
+  

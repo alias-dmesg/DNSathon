@@ -1,0 +1,270 @@
+---
+# tasks file for management
+# Switch to ansible user before continue
+
+ - name: Set Hostname
+   hostname:
+     name: "{{ management_hostname }}"
+   #remote_user: "{{ ansible_user }}"
+   #sudo: yes
+   #sudo_user: "{{ ansible_manager_user }}"
+
+ - name: Fix /etc/hosts 
+   lineinfile:
+    state: present
+    path: /etc/hosts
+    regexp: "^{{ ansible_default_ipv4.address }}"
+    #line: "{{ ansible_default_ipv4.address }} {{ inventory_hostname }} {{ management_hostname }}"
+    line: "{{ ansible_default_ipv4.address }} {{ inventory_hostname }} {{ ansible_hostname }} {{ management_hostname }}"
+
+# - name: Configure static interface in /etc/dhcpcd.conf 
+#   blockinfile:
+#    path: /etc/dhcpcd.conf 
+#    backup: yes
+#    block: |
+#      interface eth0
+#      static ip_address=10.10.60.5/24
+#      static router=10.10.60.1
+#      static domain_name_servers=127.0.0.1
+#    marker: "\r\n # {mark} ANSIBLE MANAGED BLOCK INTERFACE "
+#   notify: Restart service dhcpcd
+
+
+  # Configure vlan interfaces
+  # Make sure the router handle intervlan routing and default gw
+  # But no DHCP
+
+ - name: Add the 802.1q module
+   modprobe:
+    name: 8021q
+    state: present
+
+ - name: Install dig tool
+   apt: name=dnsutils state=latest
+   become: yes
+
+ - name: insert/update Vlans interfaces in /etc/network/interfaces 
+   blockinfile:
+    path: /etc/network/interfaces
+    backup: yes
+    #marker: "# {mark} ANSIBLE MANAGED BLOCK INTERFACE VLAN-{{ item.id }}"
+    block: |
+      auto eth0.{{ item.id }}
+      iface eth0.{{ item.id }} inet manual
+          vlan-raw-device eth0
+    marker: "# {mark} ANSIBLE MANAGED BLOCK INTERFACE VLAN-{{ item.id }}"
+   with_items: "{{ vlans }}"
+
+ - name: insert/update Vlans interfaces in /etc/dhcpcd.conf 
+   blockinfile:
+    path: /etc/dhcpcd.conf 
+    backup: yes
+    #marker: "# {mark} ANSIBLE MANAGED BLOCK INTERFACE VLAN "
+    block: |
+      interface eth0.{{ item.id }}
+      static ip_address=10.10.{{ item.id  }}.5/24
+      static router=10.10.{{ item.id  }}.1
+      static domain_name_servers=127.0.0.1
+    marker: "# {mark} ANSIBLE MANAGED BLOCK INTERFACE VLAN-{{ item.id }}"
+   with_items: "{{ vlans }}"
+
+# - name: test interfaces
+#   command: echo {{item.id }}
+#   #loop: "{{ groups['all']  | map('extract', hostvars, ['ansible_host'] ) | list  }} "
+#   with_items: "{{ vlans }}"
+   
+
+ # Install and Configure Unbound listen on 5300
+ - name: Install Unbound
+   apt: name=unbound state=latest    
+   become: yes
+
+ - name: Download root.hints
+   get_url:
+    backup: yes
+    url: https://www.internic.net/domain/named.root
+    dest: "{{ unbound_dir }}/root.hints"
+    mode: 0440
+    group: unbound
+    owner: unbound
+
+ # Configure Unbound
+ #- name: Remove forward config
+ #  blockinfile:
+ #   backup: yes
+ #   path: /etc/unbound/unbound.conf
+ #   marker: "<!-- {mark} ANSIBLE MANAGED BLOCK -->"
+ #   insertbefore: "forward-zone"
+ #   content: ""
+
+ #- name: Enable external config in Unbound
+ #  lineinfile:
+ #   backup: yes
+ #   path: /etc/unbound/unbound.conf
+ #   regexp: '^# include'
+ #   line: 'include: "/etc/unbound/unbound.conf.d/*.conf"'
+ - name: Add root hints and access control to unbound
+   template:
+    backup: yes
+    src: unbound.j2
+    dest: "{{ unbound_dir }}/unbound.conf.d/dnshathon.conf"
+
+ # Install and configure dnsdist: use 127.0.0.1:5300 as backend
+
+#  - name: Prepare DNSdist installation
+#   lineinfile:
+#    backup: yes
+#    path: /etc/apt/sources.list.d/pdns.list
+#    regexp: '^deb '
+#    line: 'deb http://repo.powerdns.com/raspbian jessie-dnsdist-13 main'
+ - name: Install dnsdist
+   apt: name=dnsdist state=latest    
+   become: yes
+
+ - name: Configure newServer for dnsdist
+   lineinfile:
+    backup: yes
+    path: "{{ dnsdist_config }}/dnsdist.conf"
+    create: yes
+    regexp: '^newServer'
+    # Forward to pihole
+    line: 'newServer("127.0.0.1:5300")'
+ - name: Add Local forwarder for dnsdist
+#   blockinfile:
+#    backup: yes
+#    path: /etc/dnsdist/dnsdist.conf
+#    #marker: "# {mark} ANSIBLE MANAGED BLOCK -->"
+#    #block: |
+#    #  addLocal('10.10.{{ item.id }}.5')
+#    #with_items: "{{ vlans }}"
+#    block: |
+#      addLocal(10.10.{{ item.id }}.5)
+#    #marker: "# {mark} ANSIBLE MANAGED BLOCK LOCAL VLAN-{{ item.id }}"
+#   with_items: "{{ vlans }}"
+   lineinfile:
+    backup: yes
+    path: "{{ dnsdist_config }}/dnsdist.conf"
+    line: addLocal("10.10.{{ item.id }}.5")
+   with_items: "{{ vlans }}"
+
+ - name: Listen to local IPv4
+   lineinfile:
+    backup: yes
+    path: "{{ dnsdist_config }}/dnsdist.conf"
+    line: addLocal("127.0.0.1")
+
+ - name: Listen to local IPv6
+   lineinfile:
+    backup: yes
+    path: "{{ dnsdist_config }}/dnsdist.conf"
+    line: addLocal("::1")
+
+ - name: Install dnsmasq
+   apt: name=dnsmasq state=latest
+   become: yes
+
+
+   # Install and configure pihole: use router as GW and dnsdist as resolver
+ - name: Download Pi-Hole installer
+   get_url:
+    url: https://install.pi-hole.net
+    dest: /root/install-pihole.sh
+    mode: 0740
+
+ - name: Create pihole configuration directory
+   become: yes
+   file:
+    name: "{{ pihole_config_path }}"
+    state: directory
+    mode: 0755
+    #owner: "{{ pihole_user }}"
+    #group: "{{ pihole_group }}" 
+
+ - name: Create pihole configuration
+   become: yes
+   template:
+    src: "setupVars.conf.j2"
+    dest: "{{ pihole_config_path }}/setupVars.conf"
+    mode: 0644
+
+
+ - name: Restart service dhcpcd
+   service:
+    name: dhcpcd
+    state: restarted
+
+ - name: Restart service unbound
+   service:
+    name: unbound
+    enabled: yes
+    state: restarted
+
+ - name: Restart service dnsdist
+   service:
+    name: dnsdist
+    enabled: yes
+    state: restarted
+
+ - name: Install Pi-Hole
+   shell: "/root/install-pihole.sh --unattended"
+
+ - name: Set PiHole to update every week
+   become: yes
+   replace:
+    path: /etc/cron.d/pihole
+    regexp: '^#(.*updatePihole.*)$'
+    replace: '\1'
+    backup: yes
+
+ - name: Add custom config for pihole
+   template:
+    backup: yes
+    src: pihole.conf.j2
+    dest: "{{ dnsmasq_dir}}/00-dnshaton.conf"
+
+ - name: Add custom blocklist
+   become: yes
+   template:
+    src: "freek_ws_blocklist"   
+    dest: "{{ pihole_config_path }}/free_ws_blocklist"
+    mode: 0644
+ - name: Enable custom blocklist
+   lineinfile:
+    backup: yes
+    path: "{{ pihole_config_path }}/adlists.list"
+    line: "{{ item }}"
+   with_lines: cat "{{ pihole_config_path }}/free_ws_blocklist"
+
+ - name: Restart service dnsmasq
+   service:
+    name: dnsmasq
+    enabled: yes
+    state: restarted
+
+ - name: Restart service pihole
+   service:
+    name: pihole-FTL    
+    enabled: yes
+    state: restarted
+
+ - name: Use pihole instead of Unbound in dnsdist
+   lineinfile:
+    backup: yes
+    path: /etc/dnsdist/dnsdist.conf
+    create: yes
+    regexp: '^newServer'
+    # Forward to pihole
+    line: 'newServer("127.0.0.1:5353")'
+ 
+ - name: Restart service dnsdist
+   service:
+    name: dnsdist
+    enabled: yes
+    state: restarted
+
+
+  # Install and configure influxdb
+
+   # Install and configure grafana
+
+   # Load custom dashboard 

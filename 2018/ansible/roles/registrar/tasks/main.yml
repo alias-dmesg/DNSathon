@@ -1,0 +1,13 @@
+---
+# tasks file for registrar
+  # Configure authoritative server or not
+  # Use registry API access to create domain
+
+  # Install and congigure web server
+ - name: Install nginx
+   apt: name=nginx-full state=latest
+   become: yes
+
+  # Develop custom web app for domain registration
+
+  # Create domains for the registrar and customer (resolvers)

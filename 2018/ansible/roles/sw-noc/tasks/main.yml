@@ -1,0 +1,50 @@
+---
+# tasks file for sw-noc
+ - name: Generate configuration files
+   ios_config:
+     src: router.j2
+
+ - name: Set VTP
+   ios_config:
+     lines:
+       - vtp domain {{ vtp_domain }}
+       - vtp mode server
+       - vtp version 2
+       - vtp pruning 
+       - vtp password {{ vtp_password }}
+
+ - name: Create VLANs
+   ios_config:
+     lines:
+       - name "{{ item.name }}"
+     parents: vlan "{{ item.id }}"
+   with_items: "{{ vlans }}"
+
+ - name: Set STP Root
+   ios_config:
+     lines: spanning-tree vlan {{ item.id }} root primary
+   with_items: "{{ vlans }}"
+
+ - name: Set SVIs
+   ios_config:
+     lines:
+       - ip address 10.10.{{ item.id }}.20 255.255.255.0
+       - no shutdown
+     parents: interface vlan{{ item.id }}     
+     with_items: "{{ vlans }}"
+     when: item.id != 60
+
+ - name: Save configuration
+   ios_config: 
+     save: yes
+
+ - name: Get new config
+   ios_config:
+     commands: 
+       - show run
+     register: config
+
+ - name: Save new config
+   copy:
+    content: "{{ config.stdout[0] }}"
+    dest: "{{ role_path }}/sw-noc/files/sw-noc_config-{{ timestamp }}.txt" 

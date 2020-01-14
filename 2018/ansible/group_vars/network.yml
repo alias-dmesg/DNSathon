@@ -1,0 +1,18 @@
+ansible_ssh_common_args: -o kexalgorithms=diffie-hellman-group1-sha1
+ansible_ssh_user: ciscoconfig
+ansible_ssh_pass: qflx01e7ZwnuGQ
+
+ntp_server: 10.10.60.5
+enable_secret: dnsathonCISCO
+
+syslog_server: "{{ ntp_server }}"
+vtp_domain: DNSathon
+vtp_password: dnsathonVTP
+
+vty_con_pass: dnsathonVTY
+
+wan_ip: 164.160.143.68
+wan_mask: 255.255.255.192
+wan_gw: 164.160.143.126
+wan_interface: FastEthernet0/0
+lan_interface: FastEthernet0/1

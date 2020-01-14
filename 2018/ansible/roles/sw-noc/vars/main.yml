@@ -1,0 +1,41 @@
+---
+# vars file for sw-noc
+interface: FastEthernet0
+
+trunks:
+ - id: 24
+   desc: "Router"
+   mgmt: "{{ vlans[5].id }}"
+ - id: 23
+   desc: "Management Server"
+   mgmt: "{{ vlans[5].id }}"
+ - id: 16
+   desc: "Access Swicth"
+   mgmt: "{{ vlans[5].id }}"
+
+servers_access:
+ - id: 3
+   desc: "root-1"
+   vlan: "{{ vlan[0].id }}"
+ - id: 4
+   desc: "root-2"
+   vlan: "{{ vlan[0].id }}" 
+ - id: 5
+   desc: "registry-1"
+   vlan: "{{ vlan[1].id }}" 
+ - id: 6
+   desc: "registry-2"
+   vlan: "{{ vlan[1].id }}" 
+ - id: 7
+   desc: "registrar-1"
+   vlan: "{{ vlan[2].id }}"
+ - id: 8
+   desc: "registrar-2"
+   vlan: "{{ vlan[2].id }}"
+ - id: 9
+   desc: "resolver-1"
+   vlan: "{{ vlan[3].id }}"
+ - id: 10
+   desc: "resolver-2"
+   vlan: "{{ vlan[3].id }}"
+ 

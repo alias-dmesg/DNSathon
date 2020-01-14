@@ -1,0 +1,12 @@
+---
+# vars file for registry
+
+postgres_server: 127.0.0.1
+postgres_user: powerdns
+postgres_password: Hum@!S3cr3t
+postgres_database: powerdns
+
+pdns_api_key: PFcC1MAflvU
+pdns_api_ip: 127.0.0.1
+pdns_api_port: 8081
+pdns_api_network: 0.0.0.0/0,::/0

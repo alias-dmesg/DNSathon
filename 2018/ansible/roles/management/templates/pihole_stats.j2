@@ -1,0 +1,69 @@
+#! /usr/bin/python
+# {{ ansible_managed }}
+
+import requests
+from influxdb import InfluxDBClient
+
+HOSTNAME = "{{ management_hostname }}}" # Pi-hole hostname to report in InfluxDB for each measurement
+PIHOLE_API = "http://{{ ansible_host }}/admin/api.php"
+INFLUXDB_SERVER = "{{ influxdb_ip_address }}" # IP or hostname to InfluxDB server
+INFLUXDB_PORT = 8086 # Port on InfluxDB server
+INFLUXDB_USERNAME = "root"
+INFLUXDB_PASSWORD = "root"
+INFLUXDB_DATABASE = "{{ influxdb_database_dns}}"
+
+def main():
+
+    api = requests.get(PIHOLE_API) # URI to pihole server api
+    API_out = api.json()
+    print(API_out)
+    domains_being_blocked = (API_out['domains_being_blocked'])
+    dns_queries_today = (API_out['dns_queries_today'])
+    ads_percentage_today = (API_out['ads_percentage_today'])
+    ads_blocked_today = (API_out['ads_blocked_today'])
+    clients_ever_seen = (API_out['clients_ever_seen'])
+    unique_domains = (API_out['unique_domains'])
+    unique_clients = (API_out['unique_clients'])
+    queries_forwarded = (API_out['queries_forwarded'])
+    queries_cached = (API_out['queries_cached'])
+    dns_queries_all_types = (API_out['dns_queries_all_types'])
+    reply_no_data = (API_out['reply_NODATA'])
+    reply_nx_domain = (API_out['reply_NXDOMAIN'])
+    reply_cname = (API_out['reply_CNAME'])
+    reply_ip = (API_out['reply_IP'])
+    status = (API_out['status'])
+
+    json_body = [
+	    {
+	        "measurement": "piholestats." + HOSTNAME.replace(".", "_"),
+	        "tags": {
+	            "host": HOSTNAME
+	        },
+	        "fields": {
+	            "domains_being_blocked": int(domains_being_blocked),
+                    "dns_queries_today": int(dns_queries_today),
+                    "ads_percentage_today": float(ads_percentage_today),
+                    "ads_blocked_today": int(ads_blocked_today),
+                    "clients_ever_seen": int(clients_ever_seen),
+                    "unique_clients": int(unique_clients),
+                    "unique_domains": int(unique_domains),
+                    "queries_forwarded" : int(queries_forwarded),
+                    "queries_cached": int(queries_cached),
+                    "dns_queries_all_type": int(dns_queries_all_types),
+                    "reply_no_data": int(reply_no_data),
+                    "reply_nx_domain": int(reply_nx_domain),
+                    "reply_cname": int(reply_cname),
+                    "reply_ip": int(reply_ip),
+                    "status": status
+	        }
+	    }
+	]
+    print (json_body)
+    # InfluxDB host, InfluxDB port, Username, Password, database
+    client = InfluxDBClient(INFLUXDB_SERVER, INFLUXDB_PORT, INFLUXDB_USERNAME, INFLUXDB_PASSWORD, INFLUXDB_DATABASE) 
+
+    client.write_points(json_body)
+    print(json_body)
+
+if __name__ == '__main__':
+       main()

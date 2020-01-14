@@ -1,0 +1,31 @@
+---
+- name: Configure and deploy full DNS infrastructure Lab
+  hosts: all
+  gather_facts: yes
+  become: yes
+  roles:
+    - role: net-common
+      when: inventory_hostname in groups['network']
+    - role: router
+      when: inventory_hostname in groups['router']
+    - role: sw-noc
+      when: inventory_hostname in groups['noc']
+    - role: sw-access
+      when: inventory_hostname in groups['access']
+    - role: srv-common
+      when: inventory_hostname in groups['server']
+    - role: management
+      when: inventory_hostname in groups['management']
+    - role: root 
+      when: inventory_hostname in groups['dns-root'] 
+    - role: registry 
+      when: inventory_hostname in groups['dns-registry'] 
+    - role: registrar 
+      when: inventory_hostname in groups['dns-registrar'] 
+    - role: resolver 
+      when: inventory_hostname in groups['dns-resolver'] 
+
+#    - {role: root, when: root is defined and root == 'true'}
+#    - {role: registry, when: registry is defined and registry == 'true' }
+#    - {role: registrar, when: registrar is defined and registrar == 'true' }
+#    - {role: resolver, when: resolver is defined and resolver == 'true' }
