@@ -58,7 +58,7 @@ Router and switches have the following adressing plan. Note that, the network in
 
 #### Design ####
 In a nutshell, we have setup following network design
-![Infrastructure Overview](https://raw.githubusercontent.com/AlfredArouna/DNSathon/master/2018/dnsathon.png)
+![Infrastructure Overview](dnsathon.png)
 
 
 ### Servers ###
@@ -75,7 +75,7 @@ With servers, we will offer DNS services, such as:
 
 
 ## Actitivies Report (draft) ##
-DNShathon draft is available  [here](https://raw.githubusercontent.com/AlfredArouna/DNSathon/master/2018/dnsathon_activities_report_draft.pdf)
+DNShathon draft is available  [here](dnsathon_activities_report_draft.pdf)
 
 ## Teams ##
 
@@ -149,17 +149,17 @@ DNShathon draft is available  [here](https://raw.githubusercontent.com/AlfredAro
 
 ## Management Collected Stats ##
 ### DNS Queries per team ###
-![DNS queries per group](https://raw.githubusercontent.com/AlfredArouna/DNSathon/master/2018/01_dns_traffic_per_group.png)
+![DNS queries per group](01_dns_traffic_per_group.png)
 ### Total DNS Queries ###
-![Total DNS queries](https://raw.githubusercontent.com/AlfredArouna/DNSathon/master/2018/02_dns_queries.png)
+![Total DNS queries](02_dns_queries.png)
 ### DNS Responses ###
-![DNS responses code](https://raw.githubusercontent.com/AlfredArouna/DNSathon/master/2018/03_dns_responses.png)
+![DNS responses code](03_dns_responses.png)
 ### DNS Responses Type ###
-![DNS responses type](https://raw.githubusercontent.com/AlfredArouna/DNSathon/master/2018/04_dns_replies.png)
+![DNS responses type](04_dns_replies.png)
 ### DNS Cached vs Forwarded ###
-![DNS Cached vs Forwarded](https://raw.githubusercontent.com/AlfredArouna/DNSathon/master/2018/05_dns_cache_forwarded.png)
+![DNS Cached vs Forwarded](05_dns_cache_forwarded.png)
 ### Global Network Latency ###
-![Network Latency](https://raw.githubusercontent.com/AlfredArouna/DNSathon/master/2018/06_ping_latency.png)
+![Network Latency](06_ping_latency.png)
 
 ## Support & Logistiq ##
 * BDF 2018 Team (Yazid, Ramanou, Harold, etc)
